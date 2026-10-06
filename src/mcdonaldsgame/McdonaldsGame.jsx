@@ -44,6 +44,7 @@ const OrderInput = ({ label, type, value, onChange, icon: Icon, color, disabled 
     </label>
     <input
       type="number"
+      inputMode="numeric"
       min="0"
       value={value === 0 ? '' : value}
       onChange={(e) => onChange(type, parseInt(e.target.value) || 0)}
@@ -55,14 +56,14 @@ const OrderInput = ({ label, type, value, onChange, icon: Icon, color, disabled 
 );
 
 const StatCard = ({ title, value, subValue, icon: Icon, alert }) => (
-  <div className={`bg-white p-4 rounded-xl shadow-sm border-l-4 ${alert ? 'border-red-500 bg-red-50' : 'border-[#FFC72C]'} relative overflow-hidden`}>
+  <div className={`bg-white p-3 @lg:p-4 rounded-xl shadow-sm border-l-4 ${alert ? 'border-red-500 bg-red-50' : 'border-[#FFC72C]'} relative overflow-hidden`}>
     <div className="flex justify-between items-start z-10 relative">
-      <div>
+      <div className="min-w-0">
         <h3 className="text-gray-500 text-xs font-bold uppercase tracking-wider">{title}</h3>
-        <div className="text-2xl font-black text-gray-800 mt-1">{value.toLocaleString()}</div>
+        <div className="text-xl @lg:text-2xl font-black text-gray-800 mt-1">{value.toLocaleString()}</div>
         {subValue && <div className="text-xs text-red-600 font-bold mt-1">{subValue}</div>}
       </div>
-      <div className={`p-2 rounded-full ${alert ? 'bg-red-100 text-red-600' : 'bg-yellow-50 text-yellow-600'}`}>
+      <div className={`hidden @lg:block p-2 rounded-full ${alert ? 'bg-red-100 text-red-600' : 'bg-yellow-50 text-yellow-600'}`}>
         <Icon size={20} />
       </div>
     </div>
@@ -407,20 +408,21 @@ const App = () => {
       )}
 
       {/* Header */}
-      <header className="bg-[#DA291C] text-white p-4 shadow-lg z-20 sticky top-0">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
+      {/* Not sticky below md: the app's mobile top bar already occupies top-0 */}
+      <header className="bg-[#DA291C] text-white px-4 py-3 @md:p-4 shadow-lg z-20 md:sticky md:top-0">
+        <div className="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-x-4 gap-y-2">
           <div className="flex items-center gap-3">
             <div className="bg-[#FFC72C] p-2 rounded-lg text-[#DA291C] font-black text-xl leading-none">M</div>
             <div>
               <h1 className="font-bold text-lg leading-tight">Supply Chain AI Sim</h1>
-              <p className="text-xs text-red-100 opacity-90">Regional DC Manager: Martin Bower</p>
+              <p className="hidden @sm:block text-xs text-red-100 opacity-90">Regional DC Manager: Martin Bower</p>
             </div>
           </div>
           
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3 @sm:gap-6">
              <div className="text-right">
               <div className="text-xs text-red-200 uppercase font-bold">Total Cost</div>
-              <div className="text-2xl font-black text-[#FFC72C]">${totalCost.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
+              <div className="text-xl @sm:text-2xl font-black text-[#FFC72C]">${totalCost.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
             </div>
             <div className="flex flex-col items-end">
               <span className="text-xs font-bold uppercase bg-red-800 px-2 py-1 rounded text-white">Week {week} / {MAX_WEEKS}</span>
@@ -430,10 +432,10 @@ const App = () => {
       </header>
 
       {/* Main Game Area */}
-      <main className="flex-grow p-4 md:p-6 max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-6">
+      <main className="flex-grow p-4 @md:p-6 max-w-7xl mx-auto w-full grid grid-cols-1 @3xl:grid-cols-12 gap-4 @md:gap-6">
         
         {/* LEFT COLUMN: DOWNSTREAM DEMAND */}
-        <div className="md:col-span-3 space-y-6">
+        <div className="@3xl:col-span-3 space-y-4 @md:space-y-6">
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="bg-gray-800 text-white p-3 flex items-center justify-between">
               <h2 className="font-bold flex items-center gap-2"><Store size={18} /> Downstream</h2>
@@ -459,7 +461,7 @@ const App = () => {
           </div>
 
           {/* Activity Log */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden h-96 flex flex-col">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden h-64 @3xl:h-96 flex flex-col">
             <div className="bg-gray-100 p-3 border-b border-gray-200">
               <h2 className="font-bold text-sm text-gray-700 flex items-center gap-2"><Activity size={16} /> Activity Log</h2>
             </div>
@@ -479,10 +481,11 @@ const App = () => {
         </div>
 
         {/* CENTER COLUMN: PLAYER / DC */}
-        <div className="md:col-span-6 space-y-6">
+        {/* Shown first on narrow screens so the player's controls aren't buried */}
+        <div className="order-first @3xl:order-none @3xl:col-span-6 space-y-4 @md:space-y-6">
           
           {/* Inventory Dashboard */}
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 gap-2 @md:gap-4">
             <StatCard 
               title="Buns" 
               value={inventory.buns} 
@@ -525,8 +528,9 @@ const App = () => {
                </div>
              )}
 
-             <div className="p-6">
-                <div className="flex justify-between items-center mb-6">
+             <div className="p-4 @md:p-6 flex flex-col gap-4 @md:gap-6">
+                {/* `contents` on narrow screens lets the button drop below the inputs via order-last */}
+                <div className="contents @lg:flex @lg:flex-row @lg:justify-between @lg:items-center @lg:gap-4">
                   <div>
                     <h2 className="text-xl font-bold text-gray-800">Replenishment Console</h2>
                     <p className="text-sm text-gray-500 flex items-center gap-1"><Info size={14}/> Lead Time: {LEAD_TIME} Weeks</p>
@@ -534,7 +538,7 @@ const App = () => {
                   <button 
                     onClick={startTurnSequence}
                     disabled={gameOver || turnPhase !== 'PLAYER'}
-                    className={`px-6 py-3 rounded-lg font-bold shadow-md transition-transform active:scale-95 flex items-center gap-2 ${
+                    className={`order-last @lg:order-none px-6 py-3 rounded-lg font-bold shadow-md transition-transform active:scale-95 flex items-center justify-center gap-2 ${
                       gameOver ? 'bg-gray-400 cursor-not-allowed' : 
                       turnPhase !== 'PLAYER' ? 'bg-gray-200 text-gray-400' :
                       'bg-[#FFC72C] hover:bg-[#ffcf4d] text-[#DA291C]'
@@ -546,7 +550,7 @@ const App = () => {
                   </button>
                 </div>
 
-                <div className="grid grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 @md:grid-cols-3 gap-4 @md:gap-6">
                    <OrderInput 
                       label="Order Buns (Aryzta)" 
                       type="buns" 
@@ -579,8 +583,9 @@ const App = () => {
           </div>
 
           {/* Chart */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 h-72">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 h-72 @md:h-80 flex flex-col">
             <h3 className="text-sm font-bold text-gray-600 mb-2">Inventory Levels vs. Backlog Trend</h3>
+            <div className="flex-1 min-h-0">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={history}>
                 <defs>
@@ -594,21 +599,22 @@ const App = () => {
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#eee"/>
-                <XAxis dataKey="week" />
-                <YAxis />
+                <XAxis dataKey="week" tick={{ fontSize: 12 }} interval="preserveStartEnd" />
+                <YAxis tick={{ fontSize: 12 }} width={44} />
                 <Tooltip 
                   contentStyle={{borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'}}
                 />
-                <Legend />
+                <Legend verticalAlign="bottom" wrapperStyle={{ fontSize: 12 }} />
                 <Area type="monotone" dataKey="inventory" stroke="#FFC72C" fillOpacity={1} fill="url(#colorInv)" name="Total Inventory" />
                 <Area type="monotone" dataKey="backlog" stroke="#DA291C" fillOpacity={1} fill="url(#colorBack)" name="Total Backlog" />
               </AreaChart>
             </ResponsiveContainer>
+            </div>
           </div>
         </div>
 
         {/* RIGHT COLUMN: UPSTREAM SUPPLY */}
-        <div className="md:col-span-3 space-y-6">
+        <div className="@3xl:col-span-3 space-y-4 @md:space-y-6">
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="bg-gray-800 text-white p-3 flex items-center justify-between">
               <h2 className="font-bold flex items-center gap-2"><Factory size={18} /> Upstream (AI)</h2>
@@ -681,11 +687,11 @@ const App = () => {
       {/* Game Over Modal */}
       {gameOver && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-8 text-center border-t-8 border-[#DA291C]">
-            <h2 className="text-3xl font-black text-gray-800 mb-2">Simulation Complete</h2>
+          <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90dvh] overflow-y-auto p-6 sm:p-8 text-center border-t-8 border-[#DA291C]">
+            <h2 className="text-2xl sm:text-3xl font-black text-gray-800 mb-2">Simulation Complete</h2>
             <p className="text-gray-500 mb-6">Regional Distribution Center Performance Report</p>
             
-            <div className="bg-gray-50 rounded-xl p-6 mb-6 grid grid-cols-2 gap-4">
+            <div className="bg-gray-50 rounded-xl p-4 sm:p-6 mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="text-left">
                 <div className="text-xs uppercase text-gray-400 font-bold">Total Cost</div>
                 <div className="text-2xl font-black text-[#DA291C]">${totalCost.toLocaleString()}</div>
