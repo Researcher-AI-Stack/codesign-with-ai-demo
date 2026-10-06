@@ -342,11 +342,11 @@ export default function BlackwellSupplyChain() {
   if (gameState === 'START') {
     return (
       <div className="flex-1 bg-neutral-950 text-white flex items-center justify-center p-4 font-sans">
-        <div className="max-w-2xl w-full bg-neutral-900 border border-neutral-800 rounded-xl p-8 shadow-2xl">
+        <div className="max-w-2xl w-full bg-neutral-900 border border-neutral-800 rounded-xl p-6 md:p-8 shadow-2xl">
           <div className="flex items-center gap-4 mb-6">
-            <Bot className="w-12 h-12 text-[#76B900]" />
+            <Bot className="w-12 h-12 shrink-0 text-[#76B900]" />
             <div>
-              <h1 className="text-3xl font-bold tracking-tight">Blackwell Supply Chain AI</h1>
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Blackwell Supply Chain AI</h1>
               <p className="text-gray-500">Player vs Gemini 2.5 Agents</p>
             </div>
           </div>
@@ -391,15 +391,15 @@ export default function BlackwellSupplyChain() {
         </div>
       )}
       {/* Header */}
-      <header className="border-b border-neutral-800 bg-neutral-900/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+      <header className="border-b border-neutral-800 bg-neutral-900/50 backdrop-blur-sm md:sticky md:top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 min-h-16 py-2 md:py-0 md:h-16 flex flex-wrap md:flex-nowrap items-center justify-between gap-x-4 gap-y-2 md:gap-0">
           <div className="flex items-center gap-2">
             <div className="bg-[#76B900] p-1 rounded">
               <Cpu className="w-5 h-5 text-black" />
             </div>
-            <span className="font-bold text-lg tracking-tight">NVIDIA <span className="text-neutral-400 font-normal">Blackwell OPS</span></span>
+            <span className="font-bold text-lg tracking-tight">NVIDIA <span className="hidden md:inline text-neutral-400 font-normal">Blackwell OPS</span></span>
           </div>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3 md:gap-6">
             <div className="flex flex-col items-end">
               <span className="text-xs text-gray-500 uppercase tracking-wider">Your Cost</span>
               <span className={`font-mono font-bold ${player.cash > 100000 ? 'text-red-500' : 'text-white'}`}>
@@ -481,10 +481,11 @@ export default function BlackwellSupplyChain() {
                   </div>
                   <input 
                     type="number"
+                    inputMode="numeric"
                     disabled={gameState !== 'PLAY'}
                     value={orders.cowos}
                     onChange={(e) => handleInputChange('cowos', e.target.value)}
-                    className={`w-full bg-neutral-950 border ${errors.cowos ? 'border-red-500' : 'border-neutral-700'} rounded p-2 text-white focus:border-[#76B900] focus:outline-none transition-colors`}
+                    className={`w-full bg-neutral-950 border ${errors.cowos ? 'border-red-500' : 'border-neutral-700'} rounded p-3 md:p-2 text-white focus:border-[#76B900] focus:outline-none transition-colors`}
                   />
                   {errors.cowos && <p className="text-xs text-red-500 mt-1">{errors.cowos}</p>}
                 </div>
@@ -496,10 +497,11 @@ export default function BlackwellSupplyChain() {
                   </div>
                   <input 
                     type="number"
+                    inputMode="numeric"
                     disabled={gameState !== 'PLAY'}
                     value={orders.hbm}
                     onChange={(e) => handleInputChange('hbm', e.target.value)}
-                    className={`w-full bg-neutral-950 border ${errors.hbm ? 'border-red-500' : 'border-neutral-700'} rounded p-2 text-white focus:border-[#76B900] focus:outline-none transition-colors`}
+                    className={`w-full bg-neutral-950 border ${errors.hbm ? 'border-red-500' : 'border-neutral-700'} rounded p-3 md:p-2 text-white focus:border-[#76B900] focus:outline-none transition-colors`}
                   />
                   {errors.hbm && <p className="text-xs text-red-500 mt-1">{errors.hbm}</p>}
                 </div>
@@ -633,9 +635,9 @@ export default function BlackwellSupplyChain() {
       {/* Game Over Modal */}
       {gameState === 'END' && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-neutral-900 border border-neutral-700 p-8 rounded-xl max-w-lg w-full shadow-2xl">
-            <h2 className="text-3xl font-bold text-white mb-2">Simulation Complete</h2>
-            <div className="grid grid-cols-2 gap-4 mb-6 mt-6">
+          <div className="bg-neutral-900 border border-neutral-700 p-6 sm:p-8 rounded-xl max-w-lg w-full max-h-[90dvh] overflow-y-auto shadow-2xl">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">Simulation Complete</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 mt-6">
               <div className="bg-black/50 p-4 rounded border border-neutral-800">
                 <span className="text-gray-500 text-xs uppercase">Your Cost</span>
                 <div className="text-2xl font-bold text-red-400">${player.cash.toLocaleString()}</div>
