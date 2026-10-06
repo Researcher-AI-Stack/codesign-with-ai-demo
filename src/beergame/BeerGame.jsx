@@ -17,7 +17,6 @@ import {
   Warehouse,
   Mail,
   ClipboardList,
-  Conveyor,
   Bot,
   User,
   Cpu
@@ -547,7 +546,7 @@ export default function BeerGame() {
 
   if (gameState === 'INTRO') {
     return (
-      <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col items-center justify-center p-6">
+      <div className="flex-1 bg-slate-900 text-slate-100 flex flex-col items-center justify-center p-6">
         <div className="max-w-2xl w-full bg-slate-800 p-8 rounded-2xl shadow-2xl border border-slate-700">
           <div className="flex justify-center mb-6">
             <div className="p-4 bg-amber-500/20 rounded-full">
@@ -570,7 +569,7 @@ export default function BeerGame() {
 
   if (gameState === 'SETUP') {
     return (
-      <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col items-center justify-center p-6">
+      <div className="flex-1 bg-slate-900 text-slate-100 flex flex-col items-center justify-center p-6">
         <div className="max-w-2xl w-full bg-slate-800 p-8 rounded-2xl shadow-2xl border border-slate-700">
             <h2 className="text-3xl font-bold text-center mb-8">Select Players</h2>
             
@@ -615,7 +614,7 @@ export default function BeerGame() {
     const isAI = playerTypes[currentRole.id] === 'AI';
 
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4">
+      <div className="flex-1 bg-slate-950 flex flex-col items-center justify-center p-4">
         
         {/* Context Map on Handoff */}
         <div className="w-full max-w-5xl mb-8 opacity-50 pointer-events-none scale-75 origin-bottom">
@@ -658,7 +657,7 @@ export default function BeerGame() {
     const roleHistory = history.filter(h => h.roleId === role.id && h.week > 0 && h.week < currentWeek);
     
     return (
-      <div className="min-h-screen bg-slate-900 text-slate-100 p-4">
+      <div className="flex-1 bg-slate-900 text-slate-100 p-4">
         <div className="max-w-6xl mx-auto space-y-6">
           
           {/* VISUALIZATION: GLOBAL VIEW */}
@@ -847,7 +846,7 @@ export default function BeerGame() {
     const totalWeekCost = weekData.reduce((acc, curr) => acc + curr.cost, 0);
 
     return (
-      <div className="min-h-screen bg-slate-900 text-slate-100 p-6">
+      <div className="flex-1 bg-slate-900 text-slate-100 p-6">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-bold mb-6 text-center">Week {currentWeek} Summary</h2>
           
@@ -900,7 +899,7 @@ export default function BeerGame() {
     const totalCost = history.reduce((acc, curr) => acc + (curr.week > 0 ? curr.cost : 0), 0);
     
     return (
-      <div className="min-h-screen bg-slate-900 text-slate-100 p-6 flex flex-col items-center">
+      <div className="flex-1 bg-slate-900 text-slate-100 p-6 flex flex-col items-center">
         <div className="max-w-6xl w-full">
           <div className="text-center mb-10">
             <h1 className="text-5xl font-bold text-white mb-4">Simulation Complete</h1>

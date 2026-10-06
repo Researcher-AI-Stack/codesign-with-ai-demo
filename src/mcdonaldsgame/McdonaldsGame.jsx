@@ -397,7 +397,7 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen font-sans text-gray-800 bg-gray-50 flex flex-col relative">
+    <div className="flex-1 font-sans text-gray-800 bg-gray-50 flex flex-col relative">
       
       {/* API Key Modal if missing */}
       {!apiKey && (

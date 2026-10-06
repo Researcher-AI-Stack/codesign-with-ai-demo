@@ -341,7 +341,7 @@ export default function BlackwellSupplyChain() {
 
   if (gameState === 'START') {
     return (
-      <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center p-4 font-sans">
+      <div className="flex-1 bg-neutral-950 text-white flex items-center justify-center p-4 font-sans">
         <div className="max-w-2xl w-full bg-neutral-900 border border-neutral-800 rounded-xl p-8 shadow-2xl">
           <div className="flex items-center gap-4 mb-6">
             <Bot className="w-12 h-12 text-[#76B900]" />
@@ -383,7 +383,7 @@ export default function BlackwellSupplyChain() {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-gray-100 font-sans selection:bg-[#76B900] selection:text-black">
+    <div className="flex-1 bg-neutral-950 text-gray-100 font-sans selection:bg-[#76B900] selection:text-black">
 	  {/* API Key Modal if missing */}
       {!apiKey && (
         <div className="border-b border-neutral-800 bg-neutral-900/50 backdrop-blur-sm text-white p-2 text-center text-xs font-bold">
