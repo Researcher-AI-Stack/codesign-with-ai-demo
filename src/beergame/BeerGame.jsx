@@ -702,14 +702,14 @@ export default function BeerGame() {
                             <button 
                                 onClick={() => setPlayerTypes(prev => ({...prev, [role.id]: 'HUMAN'}))}
                                 aria-pressed={playerTypes[role.id] === 'HUMAN'}
-                                className={`px-3 py-2.5 md:py-1.5 rounded-md text-xs font-bold flex items-center gap-1 transition-colors ${playerTypes[role.id] === 'HUMAN' ? 'bg-slate-700 text-white shadow-sm' : 'text-slate-500 hover:text-slate-300'}`}
+                                className={`px-3 py-3.5 md:py-1.5 rounded-md text-xs font-bold flex items-center gap-1 transition-colors ${playerTypes[role.id] === 'HUMAN' ? 'bg-slate-700 text-white shadow-sm' : 'text-slate-500 hover:text-slate-300'}`}
                             >
                                 <User className="w-3 h-3" /> Human
                             </button>
                             <button 
                                 onClick={() => setPlayerTypes(prev => ({...prev, [role.id]: 'AI'}))}
                                 aria-pressed={playerTypes[role.id] === 'AI'}
-                                className={`px-3 py-2.5 md:py-1.5 rounded-md text-xs font-bold flex items-center gap-1 transition-colors ${playerTypes[role.id] === 'AI' ? 'bg-amber-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-300'}`}
+                                className={`px-3 py-3.5 md:py-1.5 rounded-md text-xs font-bold flex items-center gap-1 transition-colors ${playerTypes[role.id] === 'AI' ? 'bg-amber-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-300'}`}
                             >
                                 <Bot className="w-3 h-3" /> AI Agent
                             </button>
@@ -846,10 +846,10 @@ export default function BeerGame() {
                   <p className="text-xs md:text-[10px] text-slate-400 uppercase font-bold mb-2 tracking-wider">Your Order History</p>
                   <div className="flex-1 min-h-[80px] flex items-end gap-1">
                     {roleHistory.map(h => (
-                      <div key={h.week} tabIndex={0} className="flex-1 bg-amber-500/80 rounded-t-sm relative group hover:bg-amber-400 max-md:focus:bg-amber-400 focus:outline-none transition-colors" 
+                      <div key={h.week} tabIndex={0} className="flex-1 bg-amber-500/80 rounded-t-sm relative group hover:bg-amber-400 max-md:focus:bg-amber-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60 transition-colors" 
                            style={{ height: `${Math.min((h.orderPlaced / 15) * 100, 100)}%` }}>
                          {/* Tooltip */}
-                         <div className="opacity-0 group-hover:opacity-100 max-md:group-focus:opacity-100 pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1 bg-black text-xs md:text-[10px] px-1.5 py-0.5 rounded border border-slate-600 whitespace-nowrap z-10">
+                         <div className="opacity-0 group-hover:opacity-100 max-md:group-focus:opacity-100 group-focus-visible:opacity-100 pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1 bg-black text-xs md:text-[10px] px-1.5 py-0.5 rounded border border-slate-600 whitespace-nowrap z-10">
                            W{h.week}: {h.orderPlaced}
                          </div>
                       </div>
@@ -878,7 +878,7 @@ export default function BeerGame() {
                       // Scale: Max height at +/- 20 units
                       const pct = Math.min((Math.abs(net) / 20) * 45, 45); 
                       return (
-                        <div key={h.week} tabIndex={0} className="flex-1 h-full relative group focus:outline-none">
+                        <div key={h.week} tabIndex={0} className="flex-1 h-full relative group focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60">
                           <div 
                             className={`absolute w-full rounded-sm ${isPos ? 'bg-emerald-500/80' : 'bg-red-500/80'} max-md:group-focus:brightness-125`}
                             style={{ 
@@ -887,7 +887,7 @@ export default function BeerGame() {
                               top: isPos ? 'auto' : '50%' 
                             }}
                           />
-                           <div className="opacity-0 group-hover:opacity-100 max-md:group-focus:opacity-100 pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 bg-black text-xs md:text-[10px] px-1.5 py-0.5 rounded border border-slate-600 whitespace-nowrap z-10">
+                           <div className="opacity-0 group-hover:opacity-100 max-md:group-focus:opacity-100 group-focus-visible:opacity-100 pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 bg-black text-xs md:text-[10px] px-1.5 py-0.5 rounded border border-slate-600 whitespace-nowrap z-10">
                              {net}
                            </div>
                         </div>
@@ -1086,8 +1086,8 @@ export default function BeerGame() {
                  const hCons = Math.min(consDemand * 4, 100);
 
                  return (
-                   <div key={w} tabIndex={0} className="flex-1 h-full md:h-auto flex flex-col justify-end gap-1 group relative focus:outline-none">
-                      <div className="opacity-0 group-hover:opacity-100 max-md:group-focus:opacity-100 absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-black text-xs p-2 rounded whitespace-nowrap z-10 pointer-events-none border border-slate-700">
+                   <div key={w} tabIndex={0} className="flex-1 h-full md:h-auto flex flex-col justify-end gap-1 group relative focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60">
+                      <div className="opacity-0 group-hover:opacity-100 max-md:group-focus:opacity-100 group-focus-visible:opacity-100 absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-black text-xs p-2 rounded whitespace-nowrap z-10 pointer-events-none border border-slate-700">
                         W{w}: Cons {consDemand}, Man {manOrder}
                       </div>
                       <div style={{height: `${hMan}%`}} className="w-full bg-emerald-500/80 rounded-t-sm transition-all hover:bg-emerald-400"></div>
@@ -1135,9 +1135,9 @@ export default function BeerGame() {
                       // Dynamic scaling to look good even if orders are small
                       const height = Math.min(val * 4, 100); 
                       return (
-                         <div key={w} tabIndex={0} className="flex-1 bg-amber-500/80 hover:bg-amber-400 max-md:focus:bg-amber-400 focus:outline-none relative group rounded-t-sm transition-colors">
+                         <div key={w} tabIndex={0} className="flex-1 bg-amber-500/80 hover:bg-amber-400 max-md:focus:bg-amber-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60 relative group rounded-t-sm transition-colors">
                             <div style={{height: `${height}%`}} className="w-full bottom-0 absolute bg-amber-500 rounded-t-sm"></div>
-                            <div className="opacity-0 group-hover:opacity-100 max-md:group-focus:opacity-100 absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-slate-900 border border-slate-600 text-xs md:text-[10px] px-2 py-1 rounded z-10 pointer-events-none whitespace-nowrap">
+                            <div className="opacity-0 group-hover:opacity-100 max-md:group-focus:opacity-100 group-focus-visible:opacity-100 absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-slate-900 border border-slate-600 text-xs md:text-[10px] px-2 py-1 rounded z-10 pointer-events-none whitespace-nowrap">
                               Week {w}: Ordered {val}
                             </div>
                          </div>
@@ -1174,7 +1174,7 @@ export default function BeerGame() {
                          const isPositive = net >= 0;
                          
                          return (
-                           <div key={w} tabIndex={0} className="flex-1 h-full relative group focus:outline-none">
+                           <div key={w} tabIndex={0} className="flex-1 h-full relative group focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60">
                                <div 
                                  style={{ 
                                    height: `${Math.max(heightPct, 1)}%`, // Ensure at least 1% visibility
@@ -1184,7 +1184,7 @@ export default function BeerGame() {
                                  className={`absolute w-full ${isPositive ? 'bg-emerald-500' : 'bg-red-500'} rounded-sm transition-opacity hover:opacity-80`}
                                ></div>
                                {/* Tooltip */}
-                               <div className="opacity-0 group-hover:opacity-100 max-md:group-focus:opacity-100 absolute top-0 left-1/2 -translate-x-1/2 bg-slate-900 border border-slate-600 text-xs md:text-[10px] px-2 py-1 rounded z-20 pointer-events-none whitespace-nowrap shadow-xl">
+                               <div className="opacity-0 group-hover:opacity-100 max-md:group-focus:opacity-100 group-focus-visible:opacity-100 absolute top-0 left-1/2 -translate-x-1/2 bg-slate-900 border border-slate-600 text-xs md:text-[10px] px-2 py-1 rounded z-20 pointer-events-none whitespace-nowrap shadow-xl">
                                  Week {w}: {isPositive ? `Inv ${inv}` : `Backlog ${backlog}`}
                                </div>
                            </div>

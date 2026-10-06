@@ -206,7 +206,7 @@ function App() {
   const activeLabel = VIEWS.find(v => v.id === activeView)?.label;
 
   return (
-    <div className="flex flex-col md:flex-row min-h-dvh font-[sans-serif]">
+    <div className="flex flex-col md:flex-row min-h-dvh font-[sans-serif] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]">
       {/* MOBILE TOP BAR */}
       <header className="md:hidden sticky top-0 z-40 flex items-center justify-between gap-3 px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] bg-[#1e293b] border-b border-[#334155] text-white">
         <div className="min-w-0">
