@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { Factory, Truck, Package, AlertTriangle, Cpu, TrendingUp, DollarSign, Activity, Database, Server, Info, Bot, BrainCircuit, Loader2 } from 'lucide-react';
 

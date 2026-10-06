@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { Truck, Factory, Store, AlertCircle, ShoppingBag, DollarSign, TrendingUp, Package, Activity, Info, Bot, Cpu, BrainCircuit } from 'lucide-react';
 
@@ -75,7 +75,7 @@ const App = () => {
   const [week, setWeek] = useState(1);
   const [gameOver, setGameOver] = useState(false);
   const [turnPhase, setTurnPhase] = useState('PLAYER'); // PLAYER, AI_ARYZTA, AI_TYSON, PROCESSING
-  const [apiKey, setApiKey] = useState(API_KEY);
+  const [apiKey] = useState(API_KEY);
   
   // Resources (Player / DC)
   const [inventory, setInventory] = useState(generateInitialInventory());
