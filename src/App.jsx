@@ -276,7 +276,7 @@ function App() {
       </nav>
 
       {/* CONTENT AREA */}
-      <main className="@container flex-1 min-w-0 flex flex-col bg-slate-900">
+      <main className="@container flex-1 min-w-0 overflow-x-clip flex flex-col bg-slate-900">
         {renderMainContent()}
       </main>
     </div>
