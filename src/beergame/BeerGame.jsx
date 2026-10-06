@@ -166,11 +166,11 @@ const SupplyChainMap = ({ currentWeek, history }) => {
   const BOT_ROW_H = "h-24";    // Height for Inventory boxes/arrows
 
   return (
-    <div className="@container w-full bg-slate-950 p-4 @md:p-6 rounded-xl border border-slate-800 mb-6">
-      <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-6 @4xl:mb-8 text-center">Supply Chain Network</h3>
+    <div className="w-full bg-slate-950 p-4 md:p-6 rounded-xl border border-slate-800 mb-6 md:overflow-x-auto">
+      <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-6 md:mb-8 text-center">Supply Chain Network</h3>
 
-      {/* === VERTICAL LAYOUT (narrow containers) === */}
-      <div className="@4xl:hidden max-w-sm mx-auto">
+      {/* === VERTICAL LAYOUT (mobile only) === */}
+      <div className="md:hidden max-w-sm mx-auto">
         <div className="relative">
           {/* Loop track: orders run down the left rail, shipments return up the right rail.
               top-7/bottom-7 must stay at half the endpoint pill height (h-14). */}
@@ -251,12 +251,17 @@ const SupplyChainMap = ({ currentWeek, history }) => {
         </div>
       </div>
 
-      {/* === HORIZONTAL LAYOUT (wide containers) === */}
-      <div className="hidden @4xl:block overflow-x-auto">
-      <div className="flex items-start justify-center min-w-max">
-        
+      {/* === HORIZONTAL LAYOUT (md and up) === */}
+      <div className="hidden md:flex justify-center min-w-[900px]">
+      <div className="relative flex items-start min-w-0">
+        {/* Loop track: orders run right along the top row, shipments return left along the bottom row.
+            Rails sit at the row centers (TOP_ROW_H h-20 -> 40px, BOT_ROW_H h-24 -> 80+64+48 = 192px)
+            and the end columns (w-20) -> 40px in from each side. */}
+        <div className="absolute left-10 right-10 top-10 h-[76px] border-2 border-b-0 border-dashed border-amber-500/50 rounded-t-3xl pointer-events-none" aria-hidden="true"></div>
+        <div className="absolute left-10 right-10 top-[116px] h-[76px] border-2 border-t-0 border-emerald-500/50 rounded-b-3xl pointer-events-none" aria-hidden="true"></div>
+
         {/* === CONSUMER COLUMN === */}
-        <div className="flex flex-col items-center">
+        <div className="relative flex flex-col items-center w-20 shrink-0">
           {/* Top: Demand Source */}
           <div className={`${TOP_ROW_H} flex items-center justify-center`}>
             <div className="w-16 h-12 bg-slate-800 border-2 border-slate-600 rounded-lg flex items-center justify-center relative shadow-lg">
@@ -266,8 +271,8 @@ const SupplyChainMap = ({ currentWeek, history }) => {
                </div>
             </div>
           </div>
-          <div className={`${GAP_H} flex flex-col items-center justify-center`}>
-             <span className="text-[10px] font-bold text-slate-500 uppercase rotate-90 tracking-widest">Demand</span>
+          <div className={`${GAP_H} relative w-full`}>
+             <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-500 uppercase rotate-90 tracking-widest bg-slate-950 px-1.5">Demand</span>
           </div>
           {/* Bottom: Customer */}
           <div className={`${BOT_ROW_H} flex items-center justify-center`}>
@@ -289,17 +294,15 @@ const SupplyChainMap = ({ currentWeek, history }) => {
             <React.Fragment key={role.id}>
               
               {/* === CONNECTOR COLUMN (To the Left of Role) === */}
-              <div className="flex flex-col w-20 @6xl:w-28 px-2">
+              <div className="flex flex-col w-28 px-2">
                  {/* Top Arrow: ORDERS (Left -> Right) */}
                  <div className={`${TOP_ROW_H} flex items-center justify-center w-full relative`}>
-                    <div className="w-full h-0.5 bg-slate-700 border-t border-dashed border-slate-600 relative">
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-slate-900 px-2 py-0.5 rounded-full border border-slate-700 flex items-center gap-1 z-10">
-                          <Mail className="w-3 h-3 text-amber-500" />
-                          <span className="text-[10px] font-mono text-amber-500">
-                              {incomingOrder}
-                          </span>
-                          <ArrowRight className="w-3 h-3 text-slate-500" />
-                        </div>
+                    <div className="bg-slate-950 px-2 py-0.5 rounded-full border border-amber-500/40 flex items-center gap-1 z-10">
+                      <Mail className="w-3 h-3 text-amber-500" />
+                      <span className="text-[10px] font-mono font-bold text-amber-400">
+                          {incomingOrder}
+                      </span>
+                      <ArrowRight className="w-3 h-3 text-amber-500/70" />
                     </div>
                  </div>
 
@@ -308,21 +311,19 @@ const SupplyChainMap = ({ currentWeek, history }) => {
 
                  {/* Bottom Arrow: SHIPMENTS (Right -> Left) */}
                  <div className={`${BOT_ROW_H} flex items-center justify-center w-full relative`}>
-                    <div className="w-full h-1 bg-slate-700 rounded-full relative">
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-slate-900 px-2 py-0.5 rounded-full border border-emerald-900/50 flex items-center gap-1 z-10 shadow-lg">
-                          <ArrowLeft className="w-3 h-3 text-emerald-500" />
-                          <span className="text-[10px] font-mono text-emerald-400">
-                              {downstreamShipment}
-                          </span>
-                          <Truck className="w-3 h-3 text-emerald-500" />
-                        </div>
+                    <div className="bg-slate-950 px-2 py-0.5 rounded-full border border-emerald-500/40 flex items-center gap-1 z-10 shadow-lg">
+                      <ArrowLeft className="w-3 h-3 text-emerald-500/70" />
+                      <span className="text-[10px] font-mono font-bold text-emerald-400">
+                          {downstreamShipment}
+                      </span>
+                      <Truck className="w-3 h-3 text-emerald-500" />
                     </div>
                  </div>
               </div>
 
 
               {/* === ROLE COLUMN (Top Box & Bottom Box) === */}
-              <div className="flex flex-col items-center w-20 @5xl:w-24">
+              <div className="flex flex-col items-center w-24">
                 
                 {/* TOP BOX: Order Desk */}
                 <div className={`${TOP_ROW_H} w-full flex items-center justify-center`}>
@@ -336,13 +337,11 @@ const SupplyChainMap = ({ currentWeek, history }) => {
                     </div>
                 </div>
 
-                {/* Vertical Line Connector */}
-                <div className={`${GAP_H} flex items-center justify-center`}>
-                   <div className="w-px h-full bg-slate-800/50"></div>
-                </div>
+                <div className={GAP_H}></div>
 
                 {/* BOTTOM BOX: Inventory/Warehouse */}
                 <div className={`${BOT_ROW_H} w-full flex items-center justify-center`}>
+                    <div className="w-full rounded-xl bg-slate-950 relative">
                     <div className={`w-full aspect-square rounded-xl ${role.bg} ${role.border} border-2 flex flex-col items-center justify-center relative shadow-lg`}>
                       <Icon className={`w-6 h-6 ${role.color} mb-1 opacity-80`} />
                       <div className={`text-xl font-bold font-mono ${inventory <= 0 ? 'text-red-400' : 'text-white'}`}>
@@ -357,6 +356,7 @@ const SupplyChainMap = ({ currentWeek, history }) => {
                           {role.label}
                       </div>
                     </div>
+                    </div>
                 </div>
 
               </div>
@@ -366,17 +366,15 @@ const SupplyChainMap = ({ currentWeek, history }) => {
         })}
 
         {/* === FACTORY SOURCE COLUMN (Far Right) === */}
-        <div className="flex flex-col w-20 @6xl:w-28 px-2">
+        <div className="flex flex-col w-28 px-2">
              {/* Top Arrow: Into Factory */}
              <div className={`${TOP_ROW_H} flex items-center justify-center w-full relative`}>
-                <div className="w-full h-0.5 bg-slate-700 border-t border-dashed border-slate-600 relative">
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-slate-900 px-2 py-0.5 rounded-full border border-slate-700 flex items-center gap-1 z-10">
-                        <Mail className="w-3 h-3 text-amber-500" />
-                        <span className="text-[10px] font-mono text-amber-500">
-                          {factoryOrder}
-                        </span>
-                        <ArrowRight className="w-3 h-3 text-slate-500" />
-                    </div>
+                <div className="bg-slate-950 px-2 py-0.5 rounded-full border border-amber-500/40 flex items-center gap-1 z-10">
+                    <Mail className="w-3 h-3 text-amber-500" />
+                    <span className="text-[10px] font-mono font-bold text-amber-400">
+                      {factoryOrder}
+                    </span>
+                    <ArrowRight className="w-3 h-3 text-amber-500/70" />
                 </div>
              </div>
 
@@ -385,26 +383,24 @@ const SupplyChainMap = ({ currentWeek, history }) => {
 
              {/* Bottom Arrow: Production Output */}
              <div className={`${BOT_ROW_H} flex items-center justify-center w-full relative`}>
-                <div className="w-full h-1 bg-slate-700 rounded-full relative">
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-slate-900 px-2 py-0.5 rounded-full border border-emerald-900/50 flex items-center gap-1 z-10 shadow-lg">
-                        <ArrowLeft className="w-3 h-3 text-emerald-500" />
-                        <span className="text-[10px] font-mono text-emerald-400">
-                          {factoryOrder}
-                        </span>
-                        <Package className="w-3 h-3 text-emerald-500" />
-                    </div>
+                <div className="bg-slate-950 px-2 py-0.5 rounded-full border border-emerald-500/40 flex items-center gap-1 z-10 shadow-lg">
+                    <ArrowLeft className="w-3 h-3 text-emerald-500/70" />
+                    <span className="text-[10px] font-mono font-bold text-emerald-400">
+                      {factoryOrder}
+                    </span>
+                    <Package className="w-3 h-3 text-emerald-500" />
                 </div>
              </div>
         </div>
 
-        <div className="flex flex-col items-center">
+        <div className="relative flex flex-col items-center w-20 shrink-0">
             <div className={TOP_ROW_H}></div> {/* Spacer for alignment */}
-            <div className={`${GAP_H} flex flex-col items-center justify-center`}>
-               <span className="text-[10px] font-bold text-slate-500 uppercase -rotate-90 tracking-widest">Production</span>
+            <div className={`${GAP_H} relative w-full`}>
+               <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-500 uppercase -rotate-90 tracking-widest bg-slate-950 px-1.5">Production</span>
             </div>
             <div className={`${BOT_ROW_H} flex items-center justify-center`}>
                <div className="flex flex-col items-center">
-                  <div className="w-16 h-16 bg-slate-800 border-2 border-slate-600 rounded-full flex items-center justify-center shadow-lg opacity-50">
+                  <div className="w-16 h-16 bg-slate-900 border-2 border-slate-700 rounded-full flex items-center justify-center shadow-lg">
                       <Factory className="w-8 h-8 text-slate-500" />
                   </div>
                   <span className="text-[10px] font-bold text-slate-600 mt-2 uppercase">Raw Mat.</span>
@@ -413,18 +409,20 @@ const SupplyChainMap = ({ currentWeek, history }) => {
         </div>
 
       </div>
+      </div>
       
       {/* Footer Legend */}
-      <div className="flex justify-center gap-8 mt-12 border-t border-slate-800 pt-4">
+      <div className="hidden md:flex justify-center gap-8 mt-12 border-t border-slate-800 pt-4">
          <div className="flex items-center gap-2">
-            <div className="w-8 h-0.5 bg-slate-600 border-t border-dashed border-slate-400"></div>
+            <div className="w-8 border-t-2 border-dashed border-amber-500/70" aria-hidden="true"></div>
+            <Mail className="w-3 h-3 text-amber-500" aria-hidden="true" />
             <span className="text-[10px] text-slate-400 uppercase font-bold">Order Flow (Upstream)</span>
          </div>
          <div className="flex items-center gap-2">
-            <div className="w-8 h-1 bg-slate-600 rounded-full"></div>
+            <div className="w-8 border-t-2 border-emerald-500/70" aria-hidden="true"></div>
+            <Truck className="w-3 h-3 text-emerald-500" aria-hidden="true" />
             <span className="text-[10px] text-slate-400 uppercase font-bold">Shipment Flow (Downstream)</span>
          </div>
-      </div>
       </div>
     </div>
   );
@@ -666,15 +664,15 @@ export default function BeerGame() {
 
   if (gameState === 'INTRO') {
     return (
-      <div className="flex-1 bg-slate-900 text-slate-100 flex flex-col items-center justify-center p-4 @md:p-6">
-        <div className="max-w-2xl w-full bg-slate-800 p-6 @md:p-8 rounded-2xl shadow-2xl border border-slate-700">
+      <div className="flex-1 bg-slate-900 text-slate-100 flex flex-col items-center justify-center p-4 md:p-6">
+        <div className="max-w-2xl w-full bg-slate-800 p-6 md:p-8 rounded-2xl shadow-2xl border border-slate-700">
           <div className="flex justify-center mb-6">
             <div className="p-4 bg-amber-500/20 rounded-full">
               <Package className="w-12 h-12 text-amber-500" />
             </div>
           </div>
-          <h1 className="text-3xl @md:text-4xl font-bold text-center mb-2 text-white">The Beer Game</h1>
-          <p className="text-slate-400 text-center mb-8 text-base @md:text-lg">Supply Chain & Bullwhip Effect Simulation</p>
+          <h1 className="text-3xl md:text-4xl font-bold text-center mb-2 text-white">The Beer Game</h1>
+          <p className="text-slate-400 text-center mb-8 text-base md:text-lg">Supply Chain & Bullwhip Effect Simulation</p>
           
           <button 
             onClick={handleStartSetup}
@@ -689,13 +687,13 @@ export default function BeerGame() {
 
   if (gameState === 'SETUP') {
     return (
-      <div className="flex-1 bg-slate-900 text-slate-100 flex flex-col items-center justify-center p-4 @md:p-6">
-        <div className="max-w-2xl w-full bg-slate-800 p-5 @md:p-8 rounded-2xl shadow-2xl border border-slate-700">
-            <h2 className="text-2xl @md:text-3xl font-bold text-center mb-6 @md:mb-8">Select Players</h2>
+      <div className="flex-1 bg-slate-900 text-slate-100 flex flex-col items-center justify-center p-4 md:p-6">
+        <div className="max-w-2xl w-full bg-slate-800 p-5 md:p-8 rounded-2xl shadow-2xl border border-slate-700">
+            <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 md:mb-8">Select Players</h2>
             
-            <div className="grid grid-cols-1 @3xl:grid-cols-2 gap-4 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                 {ROLES.map(role => (
-                    <div key={role.id} className={`p-4 rounded-xl border ${role.border} ${role.bg} flex flex-wrap items-center justify-between gap-3`}>
+                    <div key={role.id} className={`p-4 rounded-xl border ${role.border} ${role.bg} flex max-md:flex-wrap items-center justify-between max-md:gap-3`}>
                         <div className="flex items-center gap-3">
                            <role.icon className={`w-6 h-6 ${role.color}`} />
                            <span className="font-bold text-lg">{role.label}</span>
@@ -704,14 +702,14 @@ export default function BeerGame() {
                             <button 
                                 onClick={() => setPlayerTypes(prev => ({...prev, [role.id]: 'HUMAN'}))}
                                 aria-pressed={playerTypes[role.id] === 'HUMAN'}
-                                className={`px-3 py-2.5 rounded-md text-xs font-bold flex items-center gap-1 transition-colors ${playerTypes[role.id] === 'HUMAN' ? 'bg-slate-700 text-white shadow-sm' : 'text-slate-500 hover:text-slate-300'}`}
+                                className={`px-3 py-2.5 md:py-1.5 rounded-md text-xs font-bold flex items-center gap-1 transition-colors ${playerTypes[role.id] === 'HUMAN' ? 'bg-slate-700 text-white shadow-sm' : 'text-slate-500 hover:text-slate-300'}`}
                             >
                                 <User className="w-3 h-3" /> Human
                             </button>
                             <button 
                                 onClick={() => setPlayerTypes(prev => ({...prev, [role.id]: 'AI'}))}
                                 aria-pressed={playerTypes[role.id] === 'AI'}
-                                className={`px-3 py-2.5 rounded-md text-xs font-bold flex items-center gap-1 transition-colors ${playerTypes[role.id] === 'AI' ? 'bg-amber-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-300'}`}
+                                className={`px-3 py-2.5 md:py-1.5 rounded-md text-xs font-bold flex items-center gap-1 transition-colors ${playerTypes[role.id] === 'AI' ? 'bg-amber-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-300'}`}
                             >
                                 <Bot className="w-3 h-3" /> AI Agent
                             </button>
@@ -739,13 +737,13 @@ export default function BeerGame() {
       <div className="flex-1 bg-slate-950 flex flex-col items-center justify-center p-4">
         
         {/* Context Map on Handoff */}
-        <div className="hidden @3xl:block w-full max-w-5xl mb-8 opacity-50 pointer-events-none scale-75 origin-bottom" aria-hidden="true">
+        <div className="hidden md:block w-full max-w-5xl mb-8 opacity-50 pointer-events-none scale-75 origin-bottom" aria-hidden="true">
            <SupplyChainMap currentWeek={currentWeek} history={history} />
         </div>
 
-        <div className={`w-full max-w-md p-6 @md:p-8 rounded-2xl border-2 text-center shadow-2xl ${currentRole.bg} ${currentRole.border}`}>
+        <div className={`w-full max-w-md p-6 md:p-8 rounded-2xl border-2 text-center shadow-2xl ${currentRole.bg} ${currentRole.border}`}>
           <h2 className="text-slate-400 text-sm font-semibold uppercase tracking-wider mb-2">Week {currentWeek}</h2>
-          <h1 className={`text-3xl @md:text-4xl font-bold mb-6 ${currentRole.color}`}>{currentRole.label}</h1>
+          <h1 className={`text-3xl md:text-4xl font-bold mb-6 ${currentRole.color}`}>{currentRole.label}</h1>
           
           <div className="flex justify-center mb-6">
              {isAI ? (
@@ -790,31 +788,31 @@ export default function BeerGame() {
             <div className="flex justify-between items-center gap-3 pb-4 border-b border-slate-700">
               <div>
                 <div className="text-slate-400 text-xs uppercase tracking-widest">Current Role</div>
-                <div className={`text-xl @sm:text-2xl font-bold ${role.color} flex items-center gap-2`}>
+                <div className={`text-xl md:text-2xl font-bold ${role.color} flex items-center gap-2`}>
                     {role.label}
                     {isAI && <Bot className="w-6 h-6 text-amber-500" />}
                 </div>
               </div>
               <div className="text-right">
                 <div className="text-slate-400 text-xs uppercase tracking-widest">Timeline</div>
-                <div className="text-xl @sm:text-2xl font-bold text-white">Week {currentWeek}</div>
+                <div className="text-xl md:text-2xl font-bold text-white">Week {currentWeek}</div>
               </div>
             </div>
 
             {/* Status Cards */}
-            <div className="grid grid-cols-2 gap-3 @sm:gap-4">
-              <div className="bg-slate-800 p-3 @sm:p-4 rounded-xl border border-slate-700">
-                <div className="flex items-center gap-2 text-slate-400 mb-2 text-sm @sm:text-base">
+            <div className="grid grid-cols-2 gap-3 md:gap-4">
+              <div className="bg-slate-800 p-3 md:p-4 rounded-xl border border-slate-700">
+                <div className="flex items-center gap-2 text-slate-400 mb-2 text-sm md:text-base">
                   <Package className="w-4 h-4 shrink-0" /> <span>Current Stock</span>
                 </div>
-                <div className="text-2xl @sm:text-3xl font-mono font-bold text-emerald-400">{prevData.inventory}</div>
+                <div className="text-2xl md:text-3xl font-mono font-bold text-emerald-400">{prevData.inventory}</div>
                 <div className="text-xs text-slate-500 mt-1">Holding Cost: ${(prevData.inventory * CONFIG.costHolding).toFixed(2)}</div>
               </div>
-              <div className="bg-slate-800 p-3 @sm:p-4 rounded-xl border border-slate-700">
-                <div className="flex items-center gap-2 text-slate-400 mb-2 text-sm @sm:text-base">
+              <div className="bg-slate-800 p-3 md:p-4 rounded-xl border border-slate-700">
+                <div className="flex items-center gap-2 text-slate-400 mb-2 text-sm md:text-base">
                   <AlertCircle className="w-4 h-4 shrink-0" /> <span>Backlog</span>
                 </div>
-                <div className="text-2xl @sm:text-3xl font-mono font-bold text-red-400">{prevData.backlog}</div>
+                <div className="text-2xl md:text-3xl font-mono font-bold text-red-400">{prevData.backlog}</div>
                 <div className="text-xs text-slate-500 mt-1">Penalty Cost: ${(prevData.backlog * CONFIG.costBacklog).toFixed(2)}</div>
               </div>
             </div>
@@ -845,20 +843,20 @@ export default function BeerGame() {
               <div className="grid grid-cols-2 gap-4">
                 {/* Order History Graph */}
                 <div className="bg-slate-800 p-3 rounded-xl border border-slate-700 flex flex-col">
-                  <p className="text-xs @md:text-[10px] text-slate-400 uppercase font-bold mb-2 tracking-wider">Your Order History</p>
+                  <p className="text-xs md:text-[10px] text-slate-400 uppercase font-bold mb-2 tracking-wider">Your Order History</p>
                   <div className="flex-1 min-h-[80px] flex items-end gap-1">
                     {roleHistory.map(h => (
-                      <div key={h.week} tabIndex={0} className="flex-1 bg-amber-500/80 rounded-t-sm relative group hover:bg-amber-400 focus:bg-amber-400 focus:outline-none transition-colors" 
+                      <div key={h.week} tabIndex={0} className="flex-1 bg-amber-500/80 rounded-t-sm relative group hover:bg-amber-400 max-md:focus:bg-amber-400 focus:outline-none transition-colors" 
                            style={{ height: `${Math.min((h.orderPlaced / 15) * 100, 100)}%` }}>
                          {/* Tooltip */}
-                         <div className="opacity-0 group-hover:opacity-100 group-focus:opacity-100 pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1 bg-black text-xs px-1.5 py-0.5 rounded border border-slate-600 whitespace-nowrap z-10">
+                         <div className="opacity-0 group-hover:opacity-100 max-md:group-focus:opacity-100 pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1 bg-black text-xs md:text-[10px] px-1.5 py-0.5 rounded border border-slate-600 whitespace-nowrap z-10">
                            W{h.week}: {h.orderPlaced}
                          </div>
                       </div>
                     ))}
                     {/* Placeholder for current week */}
                     <div className="flex-1 bg-slate-700/30 rounded-t-sm h-full border-b border-slate-600 flex items-end justify-center">
-                      <span className="text-xs text-slate-500 mb-1">?</span>
+                      <span className="text-xs md:text-[8px] text-slate-500 mb-1">?</span>
                     </div>
                   </div>
                 </div>
@@ -866,7 +864,7 @@ export default function BeerGame() {
                 {/* Net Stock Graph */}
                 <div className="bg-slate-800 p-3 rounded-xl border border-slate-700 flex flex-col">
                   <div className="flex justify-between items-center mb-2">
-                     <p className="text-xs @md:text-[10px] text-slate-400 uppercase font-bold tracking-wider">Net Stock</p>
+                     <p className="text-xs md:text-[10px] text-slate-400 uppercase font-bold tracking-wider">Net Stock</p>
                      <div className="flex gap-1">
                        <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
                        <div className="w-1.5 h-1.5 bg-red-500 rounded-full"></div>
@@ -882,14 +880,14 @@ export default function BeerGame() {
                       return (
                         <div key={h.week} tabIndex={0} className="flex-1 h-full relative group focus:outline-none">
                           <div 
-                            className={`absolute w-full rounded-sm ${isPos ? 'bg-emerald-500/80' : 'bg-red-500/80'} group-focus:brightness-125`}
+                            className={`absolute w-full rounded-sm ${isPos ? 'bg-emerald-500/80' : 'bg-red-500/80'} max-md:group-focus:brightness-125`}
                             style={{ 
                               height: `${Math.max(pct, 2)}%`, // Minimum 2% visibility
                               bottom: isPos ? '50%' : 'auto', 
                               top: isPos ? 'auto' : '50%' 
                             }}
                           />
-                           <div className="opacity-0 group-hover:opacity-100 group-focus:opacity-100 pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 bg-black text-xs px-1.5 py-0.5 rounded border border-slate-600 whitespace-nowrap z-10">
+                           <div className="opacity-0 group-hover:opacity-100 max-md:group-focus:opacity-100 pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 bg-black text-xs md:text-[10px] px-1.5 py-0.5 rounded border border-slate-600 whitespace-nowrap z-10">
                              {net}
                            </div>
                         </div>
@@ -906,7 +904,7 @@ export default function BeerGame() {
 
             {/* Decision Area */}
             {isAI ? (
-                 <div className="bg-slate-800 p-4 @sm:p-6 rounded-2xl border border-slate-600 shadow-lg mt-8 flex flex-col items-center justify-center text-center min-h-[160px]">
+                 <div className="bg-slate-800 p-4 md:p-6 rounded-2xl border border-slate-600 shadow-lg mt-8 flex flex-col items-center justify-center min-h-[160px]">
                     {isAIThinking && !orderInput ? (
                         <>
                             <Cpu className="w-10 h-10 text-amber-500 animate-pulse mb-3" />
@@ -929,7 +927,7 @@ export default function BeerGame() {
                     )}
                  </div>
             ) : (
-                <form onSubmit={submitTurn} className="bg-slate-800 p-4 @sm:p-6 rounded-2xl border border-slate-600 shadow-lg mt-8">
+                <form onSubmit={submitTurn} className="bg-slate-800 p-4 md:p-6 rounded-2xl border border-slate-600 shadow-lg mt-8">
                 <label className="block text-sm font-medium text-slate-300 mb-2">
                     Place Order to Upstream Supplier
                 </label>
@@ -948,7 +946,7 @@ export default function BeerGame() {
                     <button 
                     type="submit"
                     disabled={!orderInput}
-                    className="bg-amber-500 hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed text-slate-900 font-bold px-4 @sm:px-6 py-3 rounded-lg transition-colors flex items-center shrink-0"
+                    className="bg-amber-500 hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed text-slate-900 font-bold px-4 md:px-6 py-3 rounded-lg transition-colors flex items-center shrink-0"
                     >
                     Send <ArrowRight className="w-5 h-5 ml-2" />
                     </button>
@@ -970,12 +968,12 @@ export default function BeerGame() {
     const totalWeekCost = weekData.reduce((acc, curr) => acc + curr.cost, 0);
 
     return (
-      <div className="flex-1 bg-slate-900 text-slate-100 p-4 @md:p-6">
+      <div className="flex-1 bg-slate-900 text-slate-100 p-4 md:p-6">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl @md:text-3xl font-bold mb-6 text-center">Week {currentWeek} Summary</h2>
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">Week {currentWeek} Summary</h2>
 
           {/* Card layout (narrow containers) */}
-          <div className="@md:hidden space-y-3 mb-8">
+          <div className="md:hidden space-y-3 mb-8">
             {ROLES.map(role => {
               const data = weekData.find(d => d.roleId === role.id);
               return (
@@ -1008,7 +1006,7 @@ export default function BeerGame() {
           </div>
           
           {/* Table layout (wide containers) */}
-          <div className="hidden @md:block overflow-x-auto bg-slate-800 rounded-xl border border-slate-700 mb-8">
+          <div className="hidden md:block overflow-x-auto bg-slate-800 rounded-xl border border-slate-700 mb-8">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-slate-700 bg-slate-950/50">
@@ -1043,7 +1041,7 @@ export default function BeerGame() {
           <div className="flex justify-center">
             <button 
               onClick={startNextWeek}
-              className="w-full @md:w-auto justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg flex items-center gap-2 transform transition-all hover:scale-105"
+              className="w-full md:w-auto justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg flex items-center gap-2 transform transition-all hover:scale-105"
             >
               {currentWeek === CONFIG.totalWeeks ? 'Finish Simulation' : 'Start Next Week'} <ArrowRight className="w-5 h-5" />
             </button>
@@ -1057,19 +1055,19 @@ export default function BeerGame() {
     const totalCost = history.reduce((acc, curr) => acc + (curr.week > 0 ? curr.cost : 0), 0);
     
     return (
-      <div className="flex-1 bg-slate-900 text-slate-100 p-4 @md:p-6 flex flex-col items-center">
+      <div className="flex-1 bg-slate-900 text-slate-100 p-4 md:p-6 flex flex-col items-center">
         <div className="max-w-6xl w-full">
-          <div className="text-center mb-8 @md:mb-10">
-            <h1 className="text-3xl @md:text-5xl font-bold text-white mb-4">Simulation Complete</h1>
-            <div className="inline-block bg-slate-800 border border-amber-500/50 rounded-2xl p-4 @md:p-6">
-              <p className="text-slate-400 uppercase tracking-widest text-xs @md:text-sm mb-2">Total Supply Chain Cost</p>
-              <p className="text-4xl @md:text-6xl font-mono font-bold text-amber-500">${totalCost.toFixed(2)}</p>
+          <div className="text-center mb-8 md:mb-10">
+            <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">Simulation Complete</h1>
+            <div className="inline-block bg-slate-800 border border-amber-500/50 rounded-2xl p-4 md:p-6">
+              <p className="text-slate-400 uppercase tracking-widest text-xs md:text-sm mb-2">Total Supply Chain Cost</p>
+              <p className="text-4xl md:text-6xl font-mono font-bold text-amber-500">${totalCost.toFixed(2)}</p>
             </div>
           </div>
 
           {/* Main Bullwhip Reveal */}
-          <div className="bg-slate-800 rounded-2xl p-4 @md:p-8 border border-slate-700 mb-8">
-            <h2 className="text-xl @md:text-2xl font-bold mb-4 flex items-center gap-2">
+          <div className="bg-slate-800 rounded-2xl p-4 md:p-8 border border-slate-700 mb-8">
+            <h2 className="text-xl md:text-2xl font-bold mb-4 flex items-center gap-2">
               <TrendingUp className="text-red-500" /> The Bullwhip Effect Revealed
             </h2>
             <p className="text-slate-300 mb-6 leading-relaxed">
@@ -1079,7 +1077,7 @@ export default function BeerGame() {
               Compare that small change to the panic visible in the Manufacturer's orders below:
             </p>
 
-            <div className="h-48 flex items-end justify-between gap-0.5 @md:gap-1 mt-4 px-1 @md:px-4 pb-4 border-b border-slate-600 relative">
+            <div className="h-48 flex items-end justify-between gap-0.5 md:gap-1 mt-4 px-1 md:px-4 pb-4 border-b border-slate-600 relative">
                {/* Simple CSS Bar Chart for Manufacturer Orders vs Consumer Demand */}
                {Array.from({length: 20}, (_, i) => i + 1).map(w => {
                  const manOrder = getHistoryEntry(w, 'manufacturer')?.orderPlaced || 0;
@@ -1088,8 +1086,8 @@ export default function BeerGame() {
                  const hCons = Math.min(consDemand * 4, 100);
 
                  return (
-                   <div key={w} tabIndex={0} className="flex-1 h-full flex flex-col justify-end gap-1 group relative focus:outline-none">
-                      <div className="opacity-0 group-hover:opacity-100 group-focus:opacity-100 absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-black text-xs p-2 rounded whitespace-nowrap z-10 pointer-events-none border border-slate-700">
+                   <div key={w} tabIndex={0} className="flex-1 h-full md:h-auto flex flex-col justify-end gap-1 group relative focus:outline-none">
+                      <div className="opacity-0 group-hover:opacity-100 max-md:group-focus:opacity-100 absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-black text-xs p-2 rounded whitespace-nowrap z-10 pointer-events-none border border-slate-700">
                         W{w}: Cons {consDemand}, Man {manOrder}
                       </div>
                       <div style={{height: `${hMan}%`}} className="w-full bg-emerald-500/80 rounded-t-sm transition-all hover:bg-emerald-400"></div>
@@ -1114,10 +1112,10 @@ export default function BeerGame() {
           </div>
 
           {/* Detailed Player Breakdown */}
-          <h2 className="text-xl @md:text-2xl font-bold mb-6 text-center text-slate-300">Detailed Player Analysis</h2>
-          <div className="grid grid-cols-1 @4xl:grid-cols-2 gap-4 @md:gap-6 mb-12">
+          <h2 className="text-xl md:text-2xl font-bold mb-6 text-center text-slate-300">Detailed Player Analysis</h2>
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6 mb-12">
             {ROLES.map(role => (
-              <div key={role.id} className={`bg-slate-800 rounded-xl border border-slate-700 p-4 @md:p-6 ${role.border}`}>
+              <div key={role.id} className={`bg-slate-800 rounded-xl border border-slate-700 p-4 md:p-6 ${role.border}`}>
                 <h3 className={`font-bold text-xl mb-6 flex items-center gap-2 ${role.color}`}>
                    <span className={`w-3 h-3 rounded-full ${role.bg.replace('/20', '')}`}></span>
                    {role.label}
@@ -1137,9 +1135,9 @@ export default function BeerGame() {
                       // Dynamic scaling to look good even if orders are small
                       const height = Math.min(val * 4, 100); 
                       return (
-                         <div key={w} tabIndex={0} className="flex-1 bg-amber-500/80 hover:bg-amber-400 focus:bg-amber-400 focus:outline-none relative group rounded-t-sm transition-colors">
+                         <div key={w} tabIndex={0} className="flex-1 bg-amber-500/80 hover:bg-amber-400 max-md:focus:bg-amber-400 focus:outline-none relative group rounded-t-sm transition-colors">
                             <div style={{height: `${height}%`}} className="w-full bottom-0 absolute bg-amber-500 rounded-t-sm"></div>
-                            <div className="opacity-0 group-hover:opacity-100 group-focus:opacity-100 absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-slate-900 border border-slate-600 text-xs px-2 py-1 rounded z-10 pointer-events-none whitespace-nowrap">
+                            <div className="opacity-0 group-hover:opacity-100 max-md:group-focus:opacity-100 absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-slate-900 border border-slate-600 text-xs md:text-[10px] px-2 py-1 rounded z-10 pointer-events-none whitespace-nowrap">
                               Week {w}: Ordered {val}
                             </div>
                          </div>
@@ -1186,7 +1184,7 @@ export default function BeerGame() {
                                  className={`absolute w-full ${isPositive ? 'bg-emerald-500' : 'bg-red-500'} rounded-sm transition-opacity hover:opacity-80`}
                                ></div>
                                {/* Tooltip */}
-                               <div className="opacity-0 group-hover:opacity-100 group-focus:opacity-100 absolute top-0 left-1/2 -translate-x-1/2 bg-slate-900 border border-slate-600 text-xs px-2 py-1 rounded z-20 pointer-events-none whitespace-nowrap shadow-xl">
+                               <div className="opacity-0 group-hover:opacity-100 max-md:group-focus:opacity-100 absolute top-0 left-1/2 -translate-x-1/2 bg-slate-900 border border-slate-600 text-xs md:text-[10px] px-2 py-1 rounded z-20 pointer-events-none whitespace-nowrap shadow-xl">
                                  Week {w}: {isPositive ? `Inv ${inv}` : `Backlog ${backlog}`}
                                </div>
                            </div>
