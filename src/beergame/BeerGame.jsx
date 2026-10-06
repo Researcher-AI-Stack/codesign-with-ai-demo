@@ -687,31 +687,31 @@ export default function BeerGame() {
 
   if (gameState === 'SETUP') {
     return (
-      <div className="flex-1 bg-slate-900 text-slate-100 flex flex-col items-center justify-center p-4 md:p-6">
-        <div className="max-w-2xl w-full bg-slate-800 p-5 md:p-8 rounded-2xl shadow-2xl border border-slate-700">
+      <div className="flex-1 bg-slate-900 text-slate-100 flex flex-col items-center justify-center p-3 md:p-6">
+        <div className="max-w-2xl xl:max-w-[50rem] w-full bg-slate-800 p-3 md:p-8 rounded-2xl shadow-2xl border border-slate-700">
             <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 md:mb-8">Select Players</h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-8">
                 {ROLES.map(role => (
-                    <div key={role.id} className={`p-4 rounded-xl border ${role.border} ${role.bg} flex max-md:flex-wrap items-center justify-between max-md:gap-3`}>
-                        <div className="flex items-center gap-3">
-                           <role.icon className={`w-6 h-6 ${role.color}`} />
-                           <span className="font-bold text-lg">{role.label}</span>
+                    <div key={role.id} className={`p-3 md:p-4 rounded-xl border ${role.border} ${role.bg} flex max-md:flex-wrap items-center justify-between max-md:gap-2`}>
+                        <div className="flex items-center gap-2 md:gap-3">
+                           <role.icon className={`w-5 h-5 md:w-6 md:h-6 shrink-0 ${role.color}`} />
+                           <span className="font-bold text-[15px] md:text-lg">{role.label}</span>
                         </div>
-                        <div className="flex bg-slate-900 rounded-lg p-1 border border-slate-700">
+                        <div className="flex shrink-0 bg-slate-900 rounded-lg p-1 border border-slate-700">
                             <button 
                                 onClick={() => setPlayerTypes(prev => ({...prev, [role.id]: 'HUMAN'}))}
                                 aria-pressed={playerTypes[role.id] === 'HUMAN'}
-                                className={`px-3 py-3.5 md:py-1.5 rounded-md text-xs font-bold flex items-center gap-1 transition-colors ${playerTypes[role.id] === 'HUMAN' ? 'bg-slate-700 text-white shadow-sm' : 'text-slate-500 hover:text-slate-300'}`}
+                                className={`px-2 md:px-3 py-3.5 md:py-1.5 rounded-md text-xs font-bold flex items-center gap-1 whitespace-nowrap transition-colors ${playerTypes[role.id] === 'HUMAN' ? 'bg-slate-700 text-white shadow-sm' : 'text-slate-500 hover:text-slate-300'}`}
                             >
-                                <User className="w-3 h-3" /> Human
+                                <User className="hidden md:block w-3 h-3" /> Human
                             </button>
                             <button 
                                 onClick={() => setPlayerTypes(prev => ({...prev, [role.id]: 'AI'}))}
                                 aria-pressed={playerTypes[role.id] === 'AI'}
-                                className={`px-3 py-3.5 md:py-1.5 rounded-md text-xs font-bold flex items-center gap-1 transition-colors ${playerTypes[role.id] === 'AI' ? 'bg-amber-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-300'}`}
+                                className={`px-2 md:px-3 py-3.5 md:py-1.5 rounded-md text-xs font-bold flex items-center gap-1 whitespace-nowrap transition-colors ${playerTypes[role.id] === 'AI' ? 'bg-amber-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-300'}`}
                             >
-                                <Bot className="w-3 h-3" /> AI Agent
+                                <Bot className="hidden md:block w-3 h-3" /> AI Agent
                             </button>
                         </div>
                     </div>

@@ -432,10 +432,10 @@ const App = () => {
       </header>
 
       {/* Main Game Area */}
-      <main className="flex-grow p-4 md:p-6 max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
+      <main className="flex-grow p-4 md:p-6 max-w-7xl mx-auto w-full grid grid-cols-1 xl:grid-cols-12 gap-4 md:gap-6">
         
         {/* LEFT COLUMN: DOWNSTREAM DEMAND */}
-        <div className="md:col-span-3 space-y-4 md:space-y-6">
+        <div className="xl:col-span-3 space-y-4 md:space-y-6">
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="bg-gray-800 text-white p-3 flex items-center justify-between">
               <h2 className="font-bold flex items-center gap-2"><Store size={18} /> Downstream</h2>
@@ -482,7 +482,7 @@ const App = () => {
 
         {/* CENTER COLUMN: PLAYER / DC */}
         {/* Shown first on narrow screens so the player's controls aren't buried */}
-        <div className="order-first md:order-none md:col-span-6 space-y-4 md:space-y-6">
+        <div className="order-first xl:order-none xl:col-span-6 space-y-4 md:space-y-6">
           
           {/* Inventory Dashboard */}
           <div className="grid grid-cols-3 gap-2 md:gap-4">
@@ -614,7 +614,7 @@ const App = () => {
         </div>
 
         {/* RIGHT COLUMN: UPSTREAM SUPPLY */}
-        <div className="md:col-span-3 space-y-4 md:space-y-6">
+        <div className="xl:col-span-3 space-y-4 md:space-y-6">
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="bg-gray-800 text-white p-3 flex items-center justify-between">
               <h2 className="font-bold flex items-center gap-2"><Factory size={18} /> Upstream (AI)</h2>
