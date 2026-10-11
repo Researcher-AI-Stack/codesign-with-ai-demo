@@ -20,7 +20,7 @@ export default function InTransitList({ title = 'In transit', items, currentWeek
               <li key={week}>
                 <div className="text-xs font-semibold text-slate-500 mb-1">
                   Week {week}
-                  <span className="font-normal text-slate-400"> · {inWeeks <= 1 ? 'next week' : `in ${inWeeks} weeks`}</span>
+                  <span className="font-normal text-slate-400"> · {inWeeks <= 0 ? 'this week' : inWeeks === 1 ? 'next week' : `in ${inWeeks} weeks`}</span>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
                   {items.filter(i => i.arrivalWeek === week).map((item, idx) => (
