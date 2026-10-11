@@ -1,171 +1,168 @@
 import { useState, useEffect } from 'react'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, Package, UtensilsCrossed, Cpu, ArrowRight, ChevronRight } from 'lucide-react'
 import './App.css'
 import BeerGame from './beergame/BeerGame'
 import McdonaldsGame from './mcdonaldsgame/McdonaldsGame'
 import NvidiaGame from './nvidiagame/NvidiaGame'
+import { ACCENTS } from './shared/theme'
+
+const PROJECT_NAME = 'Co-Designing with AI';
 
 const VIEWS = [
   { id: 'intro', label: 'Introduction' },
   { id: 'beer', label: 'Beer Game' },
-  { id: 'game2', label: 'Industry - Fast Food' },
-  { id: 'game3', label: 'Industry - Semiconductor' },
+  { id: 'game2', label: "Fast Food (McDonald's)" },
+  { id: 'game3', label: 'Semiconductor (NVIDIA)' },
 ];
 
-const SIDEBAR_TEXT = {
-  header: "Project Overview",
-  generalDescription: "This platform hosts AI-generated simulations adapted from the Beer Game to visualize complex supply chain systems.",
-  gameDetails: {
-    intro: "Overview and instructions on using this platform.",
-    beer: "A supply chain simulation demonstrating the bullwhip effect and inventory management.",
-    game2: "Take on the role as Martin Bower's Regional DC Manager and coordinate replenishment efforts to ensure minimal inventory and backlog.",
-    game3: "Take on the role as NVIDIA's Procurement Manager and coordinate replenishment efforts to ensure minimal inventory and backlog."
-  }
-};
+const GAMES = [
+  {
+    id: 'beer',
+    icon: Package,
+    accent: ACCENTS.beer,
+    role: 'Play any of 4 roles',
+    description: 'The classic four-stage supply chain. Choose Human or AI for each role and watch small demand changes grow upstream.',
+  },
+  {
+    id: 'game2',
+    icon: UtensilsCrossed,
+    accent: ACCENTS.fastFood,
+    role: 'Regional DC Manager at Martin Brower',
+    description: 'Turn restaurant orders into bun, beef, and fish orders while AI suppliers decide how much to produce.',
+  },
+  {
+    id: 'game3',
+    icon: Cpu,
+    accent: ACCENTS.semiconductor,
+    role: 'NVIDIA Procurement Manager',
+    description: 'Source CoWoS packaging and HBM memory for Blackwell GPUs from AI-run suppliers through a demand surge.',
+  },
+];
 
-// Shared Tailwind class strings. Margins and colors are left out of the shared
-// pieces so per-element values never conflict with them.
+const CODE_STEPS = ['Create', 'Orchestrate', 'Deploy', 'Expand'];
+
+const IMPACT = [
+  'Rapid, resource-light system modeling at scale.',
+  'Cross-industry simulations beyond supply chains.',
+  'Fast scenario testing to reveal risks and bottlenecks.',
+  'Decision-ready insights before real-world deployment.',
+];
+
 const cls = {
-  title: 'text-[1.6rem] mb-[15px] text-[#f8fafc]',
-  subTitle: 'text-[0.85rem] uppercase tracking-[0.05em] mt-0 mb-2',
-  subTitleColor: 'text-[#94a3b8]',
-  generalBox: 'mb-5 pb-5 border-b border-[#334155]',
-  dynamicBox: 'bg-[rgba(52,152,219,0.1)] p-3 rounded-md border-l-4',
-  descriptionText: 'text-[0.9rem] leading-[1.5] text-[#cbd5e1]',
-  dynamicText: 'text-[0.85rem] leading-[1.4] text-[#e2e8f0]',
-  btn: 'p-3 text-left bg-transparent text-[#94a3b8] border border-[#334155] rounded-md cursor-pointer transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3498db]',
-  activeBtn: 'p-3 text-left bg-[#3498db] text-white border border-[#3498db] rounded-md cursor-pointer font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white',
+  sectionTitle: 'text-sm font-bold text-slate-500 uppercase tracking-wider mb-3',
+  body: 'text-[0.95rem] leading-relaxed text-slate-600',
+  btn: 'p-3 text-left bg-white text-slate-600 border border-slate-200 rounded-lg cursor-pointer transition-colors hover:bg-slate-50 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500',
+  activeBtn: 'p-3 text-left bg-blue-600 text-white border border-blue-600 rounded-lg cursor-pointer font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500',
 };
 
-const Introduction = ({ apiKey, onSetKey }) => {
-  return (
-    <div className="p-4 md:p-10">
-      <div className="max-w-[900px] mx-auto">
+const Introduction = ({ onSelect }) => (
+  <div className="p-4 md:p-10">
+    <div className="max-w-[960px] mx-auto space-y-10">
 
-        {/* Header Section */}
-        <div className="mb-8 md:mb-10">
-          <h1 className="text-3xl md:text-[2.5rem] md:leading-[1.5] mb-2.5 text-[#f8fafc]">
-            Co-Designing with AI
-          </h1>
-          <p className="text-lg md:text-[1.2rem] leading-[1.5] text-[#3498db]">
-            Build industrial simulations tailored to your company.
-          </p>
-        </div>
+      <header>
+        <h1 className="text-3xl md:text-[2.5rem] md:leading-tight font-bold text-slate-900 mb-2">{PROJECT_NAME}</h1>
+        <p className="text-lg md:text-xl text-blue-600">
+          AI-generated supply chain simulations, adapted from the classic Beer Game to real industries.
+        </p>
+      </header>
 
-        {/* Instructions & How to Use */}
-        <div className={cls.generalBox}>
-          <h3 className={`${cls.subTitle} ${cls.subTitleColor}`}>Instructions</h3>
-          <p className={cls.descriptionText}>
-            This demonstration platform showcases the final outputs of Co-Designing with AI,
-            using industry-adapted simulations derived from the classic Beer Game supply-chain model.
-          </p>
-
-          <div className={`${cls.dynamicBox} border-[#3498db] mt-5 mb-[25px]`}>
-            <h4 className={`${cls.subTitle} text-[#f8fafc]`}>How to Use the Demo</h4>
-            <ul className={`${cls.descriptionText} pl-5 mt-2.5`}>
-              <li><strong>Select a simulation</strong> using the side tabs: Beer Game, Fast Food Industry, or Semiconductor Industry.</li>
-              <li><strong>Choose the control mode</strong> for each role (Player or AI).</li>
-              <li><strong>Run the simulation</strong> to explore system behavior under different configurations.</li>
-            </ul>
-            <p className="text-[0.85rem] leading-[1.5] text-[#cbd5e1] mt-[15px] italic">
-              *For industry-specific simulations, only the Regional Distribution Center Manager role is user-controlled.
-              Other roles are operated by Agentic AI.
-            </p>
-          </div>
-        </div>
-
-        {/* System Connection Section */}
-        <div className={`${cls.dynamicBox} border-[#e74c3c] mb-10`}>
-          <h3 className={`${cls.subTitle} ${cls.subTitleColor}`}>System Connection (Under Construction)</h3>
-          {apiKey ? (
-            <div className="flex items-center gap-[15px]">
-              <p className={`text-[0.85rem] leading-[1.4] text-[#4ade80] font-bold`}>
-                ✅ AI Engine Connected
-              </p>
-              <button
-                onClick={onSetKey}
-                className="px-2.5 py-1 text-xs text-left bg-transparent text-[#94a3b8] border border-[#334155] rounded-md cursor-pointer transition-all duration-200"
-              >
-                Update Key
-              </button>
-            </div>
-          ) : (
-            <div className="flex flex-col gap-3 md:flex-row md:justify-between md:items-center md:gap-0">
-              <p className={cls.dynamicText}>To enable Agentic AI roles, please provide a Gemini API Key.</p>
-              <button onClick={onSetKey} className={`${cls.activeBtn} shrink-0`}>Enter API Key</button>
-            </div>
-          )}
-        </div>
-
-        {/* Background & Approach */}
-        <div className={cls.generalBox}>
-          <h3 className={`${cls.subTitle} ${cls.subTitleColor}`}>Background</h3>
-          <p className={cls.descriptionText}>
-            Complex systems are difficult to design, test, and scale. Traditional models rely on fixed assumptions,
-            static rules, and slow development cycles, making it hard to explore uncertainty, anticipate change,
-            or evaluate downstream impacts before deployment.
-          </p>
-        </div>
-
-        <div className={cls.generalBox}>
-          <h3 className={`${cls.subTitle} ${cls.subTitleColor}`}>The Approach</h3>
-          <p className={`${cls.descriptionText} mb-[15px]`}>
-            Co-Designing with AI enables rapid transformation of system concepts into executable simulations,
-            leveraging industry-specific ontologies to ensure system logic consistency.
-          </p>
-          <p className={cls.descriptionText}>
-            Our <strong>Create-Orchestrate-Deploy-Expand (CODE)</strong> framework refines the one-shot prompt
-            engineering technique for recreating game mechanics and leverages industry-specific ontologies to mitigate
-            hallucination. Agentic AI is integrated to shift the simulation from a hot-seat multiplayer style to a
-            role-specific training simulation.
-          </p>
-        </div>
-
-        {/* Demo Details */}
-        <div className={cls.generalBox}>
-          <h3 className={`${cls.subTitle} ${cls.subTitleColor}`}>Demo Capabilities</h3>
-          <ul className={`${cls.descriptionText} pl-5`}>
-            <li>Simulate industry supply chains in Semiconductors and Fast Food</li>
-            <li>Multiple modes: collaborative game, role-based training, or Agentic AI-driven simulation</li>
-            <li>Adjust parameters, constraints, and scenarios in real time</li>
-            <li>Observe system behavior and emergent outcomes</li>
-          </ul>
-        </div>
-
-        {/* Impact Section */}
-        <div className="mb-10">
-          <h3 className={`${cls.subTitle} ${cls.subTitleColor}`}>Impact</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-[15px] mt-2.5">
-            {[
-              'Rapid, resource-light system modeling at scale.',
-              'Cross-industry simulations beyond supply chains.',
-              'Fast scenario testing to reveal risks and bottlenecks.',
-              'Decision-ready insights before real-world deployment.',
-            ].map(text => (
-              <div key={text} className={`${cls.dynamicBox} border-[#3498db]`}>
-                <p className={cls.dynamicText}>{text}</p>
+      <section>
+        <h2 className={cls.sectionTitle}>Choose a simulation</h2>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {GAMES.map(game => {
+            const Icon = game.icon;
+            const label = VIEWS.find(v => v.id === game.id).label;
+            return (
+              <div key={game.id} className="flex flex-col bg-white border border-slate-200 rounded-xl shadow-sm p-5 border-t-4" style={{ borderTopColor: game.accent }}>
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 shrink-0 rounded-lg flex items-center justify-center text-white" style={{ backgroundColor: game.accent }}>
+                    <Icon className="w-5 h-5" aria-hidden="true" />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="font-bold text-slate-900 leading-tight">{label}</h3>
+                    <p className="text-sm text-slate-500">{game.role}</p>
+                  </div>
+                </div>
+                <p className="text-sm text-slate-600 leading-relaxed mb-4 flex-1">{game.description}</p>
+                <button
+                  type="button"
+                  onClick={() => onSelect(game.id)}
+                  className="flex items-center justify-center gap-2 py-2.5 rounded-lg font-semibold text-white transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-slate-400"
+                  style={{ backgroundColor: game.accent }}
+                >
+                  Play <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                </button>
               </div>
-            ))}
-          </div>
+            );
+          })}
         </div>
+      </section>
 
-        {/* Notes Footer */}
-        <div className="p-5 border-t border-[#334155]">
-          <p className="text-[0.8rem] leading-[1.5] text-[#cbd5e1] opacity-60">
-            <strong>Notes:</strong> This platform represents a raw, auto-generated prototype. Minor bugs or
-            interface misalignments may be present. Best viewed on a PC for optimal interaction.
+      <section className="bg-white border border-slate-200 rounded-xl p-5">
+        <h2 className={cls.sectionTitle}>How to play</h2>
+        <ol className={`${cls.body} list-decimal pl-5 space-y-1.5`}>
+          <li>Pick a simulation above or from the menu.</li>
+          <li>
+            In the Beer Game, choose <strong>Human</strong> or <strong>AI</strong> for each role. In the industry simulations
+            you play the distribution or procurement role, and AI agents run the suppliers.
+          </li>
+          <li>Place orders each week for 20 weeks, keeping inventory and backlog costs as low as possible.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2 className={cls.sectionTitle}>About the project</h2>
+        <p className={`${cls.body} mb-4`}>
+          Complex systems are hard to design and test because traditional models rely on fixed assumptions and slow
+          development cycles. Co-Designing with AI turns system concepts into executable simulations, using
+          industry-specific ontologies to keep the logic consistent and reduce hallucination. Agentic AI turns a
+          hot-seat multiplayer game into role-specific training.
+        </p>
+
+        <div className="bg-white border border-slate-200 rounded-xl p-5 mb-4">
+          <h3 className="font-semibold text-slate-900 mb-3">The CODE framework</h3>
+          <ol className="flex flex-col sm:flex-row sm:items-center gap-2">
+            {CODE_STEPS.map((step, i) => (
+              <li key={step} className="flex flex-col sm:flex-row sm:items-center gap-2 sm:flex-1">
+                <div className="flex-1 text-center bg-blue-50 border border-blue-200 rounded-lg px-3 py-2.5">
+                  <span className="block text-2xl font-bold text-blue-600 leading-none">{step[0]}</span>
+                  <span className="text-sm font-semibold text-slate-700">{step}</span>
+                </div>
+                {i < CODE_STEPS.length - 1 && (
+                  <ChevronRight className="hidden sm:block w-5 h-5 shrink-0 text-slate-400" aria-hidden="true" />
+                )}
+              </li>
+            ))}
+          </ol>
+          <p className="text-sm text-slate-500 mt-3">
+            Refines one-shot prompting to recreate game mechanics, then grounds each industry version in its own ontology.
           </p>
         </div>
 
-      </div>
+        <h3 className="font-semibold text-slate-900 mb-3">Impact</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {IMPACT.map(text => (
+            <div key={text} className="bg-white border border-slate-200 border-l-4 border-l-blue-500 rounded-lg p-3">
+              <p className="text-sm text-slate-700">{text}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <footer className="pt-5 border-t border-slate-200">
+        <p className="text-sm text-slate-500">
+          These simulations are AI-generated prototypes, so you may notice minor bugs.
+        </p>
+      </footer>
+
     </div>
-  );
-};
+  </div>
+);
 
 function App() {
-  // This "state" keeps track of which component is currently visible
   const [activeView, setActiveView] = useState('intro');
   const [menuOpen, setMenuOpen] = useState(false);
+  const [gameInProgress, setGameInProgress] = useState(false);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -182,36 +179,38 @@ function App() {
   }, [menuOpen]);
 
   const selectView = (id) => {
+    if (id !== activeView && gameInProgress &&
+        !window.confirm('Leave this simulation? Your progress will be lost.')) {
+      return;
+    }
+    if (id !== activeView) setGameInProgress(false);
     setActiveView(id);
     setMenuOpen(false);
     window.scrollTo(0, 0);
   };
 
-  // Logic to decide what to show in the content area
   const renderMainContent = () => {
     switch (activeView) {
-      case 'intro':
-        return <Introduction />;
       case 'beer':
-        return <BeerGame />;
+        return <BeerGame onProgressChange={setGameInProgress} />;
       case 'game2':
-        return <McdonaldsGame />;
+        return <McdonaldsGame onProgressChange={setGameInProgress} />;
       case 'game3':
-        return <NvidiaGame />;
+        return <NvidiaGame onProgressChange={setGameInProgress} />;
       default:
-        return <Introduction />;
+        return <Introduction onSelect={selectView} />;
     }
   };
 
   const activeLabel = VIEWS.find(v => v.id === activeView)?.label;
 
   return (
-    <div className="flex flex-col md:flex-row min-h-dvh font-[sans-serif] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]">
+    <div className="flex flex-col md:flex-row min-h-dvh font-sans text-slate-900 pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]">
       {/* MOBILE TOP BAR */}
-      <header className="md:hidden sticky top-0 z-40 flex items-center justify-between gap-3 px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] bg-[#1e293b] border-b border-[#334155] text-white">
+      <header className="md:hidden sticky top-0 z-40 flex items-center justify-between gap-3 px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] bg-white border-b border-slate-200">
         <div className="min-w-0">
-          <div className="font-bold leading-tight truncate">Co-Designing with AI</div>
-          <div className="text-xs text-[#94a3b8] truncate">{activeLabel}</div>
+          <div className="font-bold leading-tight truncate">{PROJECT_NAME}</div>
+          <div className="text-xs text-slate-500 truncate">{activeLabel}</div>
         </div>
         <button
           type="button"
@@ -219,7 +218,7 @@ function App() {
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={menuOpen}
           aria-controls="main-nav"
-          className="shrink-0 w-11 h-11 flex items-center justify-center rounded-md border border-slate-600 text-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3498db]"
+          className="shrink-0 w-11 h-11 flex items-center justify-center rounded-lg border border-slate-300 text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
         >
           {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
@@ -228,43 +227,33 @@ function App() {
       {/* MOBILE DRAWER BACKDROP */}
       {menuOpen && (
         <div
-          className="md:hidden fixed inset-0 z-40 bg-black/60"
+          className="md:hidden fixed inset-0 z-40 bg-slate-900/40"
           onClick={() => setMenuOpen(false)}
           aria-hidden="true"
         />
       )}
 
-      {/* SIDEBAR (slide-out drawer below md, original fixed-width sidebar at md and up) */}
+      {/* SIDEBAR (slide-out drawer below md, fixed-width sidebar at md and up) */}
       <nav
         id="main-nav"
-        className={`fixed inset-y-0 left-0 z-50 w-[85vw] max-w-[300px] overflow-y-auto max-md:px-6 max-md:pt-[max(1.5rem,env(safe-area-inset-top))] max-md:pb-[max(1.5rem,env(safe-area-inset-bottom))] transition-[transform,visibility] duration-200 ${menuOpen ? 'translate-x-0 visible' : '-translate-x-full invisible'} md:visible md:translate-x-0 md:sticky md:top-0 md:h-dvh md:shrink-0 md:max-w-none md:w-[300px] md:p-[25px] bg-[#1e293b] text-white border-r border-[#334155] flex flex-col`}
+        className={`fixed inset-y-0 left-0 z-50 w-[85vw] max-w-[300px] overflow-y-auto max-md:px-6 max-md:pt-[max(1.5rem,env(safe-area-inset-top))] max-md:pb-[max(1.5rem,env(safe-area-inset-bottom))] transition-[transform,visibility] duration-200 ${menuOpen ? 'translate-x-0 visible' : '-translate-x-full invisible'} md:visible md:translate-x-0 md:sticky md:top-0 md:h-dvh md:shrink-0 md:max-w-none md:w-[280px] md:p-6 bg-white border-r border-slate-200 flex flex-col`}
       >
-        <div className="flex items-center justify-between">
-          <h2 className={cls.title}>Menu</h2>
+        <div className="flex items-start justify-between gap-2 mb-6">
+          <div>
+            <h2 className="text-xl font-bold text-slate-900 leading-tight">{PROJECT_NAME}</h2>
+            <p className="text-sm text-slate-500 mt-1">Supply chain simulations</p>
+          </div>
           <button
             type="button"
             onClick={() => setMenuOpen(false)}
             aria-label="Close menu"
-            className="md:hidden -mt-4 w-11 h-11 flex items-center justify-center rounded-md text-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3498db]"
+            className="md:hidden -mt-2 -mr-2 w-11 h-11 shrink-0 flex items-center justify-center rounded-lg text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* GENERAL DESCRIPTION */}
-        <div className={cls.generalBox}>
-          <h3 className={`${cls.subTitle} ${cls.subTitleColor}`}>{SIDEBAR_TEXT.header}</h3>
-          <p className={cls.descriptionText}>{SIDEBAR_TEXT.generalDescription}</p>
-        </div>
-
-        {/* DYNAMIC GAME DESCRIPTION */}
-        <div className={`${cls.dynamicBox} border-[#3498db] mb-[25px]`}>
-          <p className={cls.dynamicText}>
-            <strong>Current View:</strong> {SIDEBAR_TEXT.gameDetails[activeView]}
-          </p>
-        </div>
-
-        <div className="flex flex-col max-md:gap-2.5">
+        <div className="flex flex-col gap-2">
           {VIEWS.map(view => (
             <button
               key={view.id}
@@ -280,7 +269,7 @@ function App() {
       </nav>
 
       {/* CONTENT AREA */}
-      <main className="flex-1 min-w-0 overflow-x-clip flex flex-col bg-[#0f172a]">
+      <main className="flex-1 min-w-0 overflow-x-clip flex flex-col bg-slate-50">
         {renderMainContent()}
       </main>
     </div>
