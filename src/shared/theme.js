@@ -27,8 +27,11 @@ export const CHART = {
   },
 };
 
-export const formatCurrency = (value) =>
-  `$${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+// Cents are noise once totals reach six figures, and they overflow narrow cards.
+export const formatCurrency = (value) => {
+  const digits = Math.abs(value) >= 100000 ? 0 : 2;
+  return `$${value.toLocaleString(undefined, { minimumFractionDigits: digits, maximumFractionDigits: digits })}`;
+};
 
 export const stdDev = (values) => {
   if (values.length === 0) return 0;

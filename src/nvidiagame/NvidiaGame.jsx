@@ -569,7 +569,7 @@ export default function BlackwellSupplyChain({ onProgressChange }) {
                 <XAxis dataKey="week" stroke={CHART.axis} tick={{ fontSize: 12 }} />
                 <YAxis stroke={CHART.axis} tick={{ fontSize: 12 }} />
                 <RechartsTooltip contentStyle={CHART.tooltip} labelFormatter={w => `Week ${w}`} />
-                <Legend wrapperStyle={{ fontSize: 12 }} />
+                <Legend wrapperStyle={{ fontSize: 12 }} itemSorter={null} />
                 <Line type="monotone" dataKey="demand" stroke="#0f172a" strokeWidth={2} dot={false} name="Market demand" />
                 <Line type="monotone" dataKey="fulfilled" stroke="#65a30d" strokeWidth={2} name="GPUs shipped" />
                 <Line type="monotone" dataKey="backlog" stroke="#dc2626" strokeDasharray="5 5" name="Backlog" />
@@ -587,7 +587,7 @@ export default function BlackwellSupplyChain({ onProgressChange }) {
                 <XAxis dataKey="week" stroke={CHART.axis} tick={{ fontSize: 12 }} />
                 <YAxis stroke={CHART.axis} tick={{ fontSize: 12 }} />
                 <RechartsTooltip contentStyle={CHART.tooltip} labelFormatter={w => `Week ${w}`} />
-                <Legend wrapperStyle={{ fontSize: 12 }} />
+                <Legend wrapperStyle={{ fontSize: 12 }} itemSorter={null} />
                 <Area type="monotone" dataKey="aiCowosInv" stroke={COMPONENTS[0].color} fill={COMPONENTS[0].color} fillOpacity={0.15} name="TSMC inventory" />
                 <Area type="monotone" dataKey="aiHbmInv" stroke={COMPONENTS[1].color} fill={COMPONENTS[1].color} fillOpacity={0.15} name="SK Hynix inventory" />
               </AreaChart>

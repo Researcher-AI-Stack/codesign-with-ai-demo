@@ -17,9 +17,9 @@ const PRODUCTION_DELAY = 2; // Weeks for Manufacturer production
 const API_KEY = ""; // User to provide
 
 const INGREDIENTS = [
-  { key: 'buns', label: 'Buns', supplier: 'Aryzta', icon: Sandwich, color: '#d97706', dot: 'bg-amber-500', text: 'text-amber-600' },
-  { key: 'beef', label: 'Beef patties', supplier: 'Tyson', icon: Beef, color: '#DA291C', dot: 'bg-red-600', text: 'text-red-600' },
-  { key: 'fish', label: 'Fish patties', supplier: 'Tyson', icon: Fish, color: '#2563eb', dot: 'bg-blue-600', text: 'text-blue-600' },
+  { key: 'buns', suffix: 'Buns', label: 'Buns', short: 'bun', supplier: 'Aryzta', icon: Sandwich, color: '#d97706', dot: 'bg-amber-500', text: 'text-amber-600' },
+  { key: 'beef', suffix: 'Beef', label: 'Beef patties', short: 'beef', supplier: 'Tyson', icon: Beef, color: '#DA291C', dot: 'bg-red-600', text: 'text-red-600' },
+  { key: 'fish', suffix: 'Fish', label: 'Fish patties', short: 'fish', supplier: 'Tyson', icon: Fish, color: '#2563eb', dot: 'bg-blue-600', text: 'text-blue-600' },
 ];
 
 const RECIPES = [
@@ -454,10 +454,9 @@ const FastFoodGame = ({ onProgressChange, resetGame }) => {
     const played = history.filter(h => h.week > 0);
     const avgBacklog = Math.round(played.reduce((acc, h) => acc + h.backlog, 0) / played.length);
     const stockoutWeeks = played.filter(h => h.backlog > 0).length;
-    const swings = INGREDIENTS.map(ing => {
-      const cap = ing.key[0].toUpperCase() + ing.key.slice(1);
-      return { ing, ratio: amplification(played.map(h => h[`order${cap}`]), played.map(h => h[`demand${cap}`])) };
-    }).filter(s => s.ratio !== null);
+    const swings = INGREDIENTS
+      .map(ing => ({ ing, ratio: amplification(played.map(h => h[`order${ing.suffix}`]), played.map(h => h[`demand${ing.suffix}`])) }))
+      .filter(s => s.ratio !== null);
     const biggest = swings.reduce((a, b) => (a === null || b.ratio > a.ratio ? b : a), null);
 
     return (
@@ -473,18 +472,15 @@ const FastFoodGame = ({ onProgressChange, resetGame }) => {
           chartTitle="Your orders vs. restaurant demand"
           takeaway={biggest && (
             <>
-              Your {biggest.ing.label.toLowerCase()} orders varied <strong>{biggest.ratio.toFixed(1)}×</strong> as much as {biggest.ing.label.toLowerCase()} demand.
+              Your {biggest.ing.short} orders varied <strong>{biggest.ratio.toFixed(1)}×</strong> as much as {biggest.ing.short} demand.
               Ordering close to demand keeps the bullwhip effect in check.
             </>
           )}
           chartData={played}
-          series={INGREDIENTS.flatMap(ing => {
-            const cap = ing.key[0].toUpperCase() + ing.key.slice(1);
-            return [
-              { key: `order${cap}`, name: `${ing.label} ordered`, color: ing.color },
-              { key: `demand${cap}`, name: `${ing.label} demand`, color: ing.color, dashed: true },
-            ];
-          })}
+          series={INGREDIENTS.flatMap(ing => [
+            { key: `order${ing.suffix}`, name: `${ing.label} ordered`, color: ing.color },
+            { key: `demand${ing.suffix}`, name: `${ing.label} demand`, color: ing.color, dashed: true },
+          ])}
           onRestart={resetGame}
         />
       </div>
@@ -647,7 +643,7 @@ const FastFoodGame = ({ onProgressChange, resetGame }) => {
                 <XAxis dataKey="week" stroke={CHART.axis} tick={{ fontSize: 12 }} />
                 <YAxis stroke={CHART.axis} tick={{ fontSize: 12 }} />
                 <Tooltip contentStyle={CHART.tooltip} labelFormatter={w => `Week ${w}`} />
-                <Legend wrapperStyle={{ fontSize: 12 }} />
+                <Legend wrapperStyle={{ fontSize: 12 }} itemSorter={null} />
                 {INGREDIENTS.map(ing => (
                   <Line key={ing.key} type="monotone" dataKey={ing.key} stroke={ing.color} strokeWidth={2} dot={false} name={ing.label} />
                 ))}

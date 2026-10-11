@@ -1,7 +1,7 @@
 import { formatCurrency } from './theme';
 
 const HeaderStat = ({ label, value }) => (
-  <div className="text-right">
+  <div className="sm:text-right">
     <div className="text-xs text-slate-500 uppercase tracking-wider">{label}</div>
     <div className="text-lg md:text-xl font-bold font-mono text-slate-900 leading-tight">{value}</div>
   </div>

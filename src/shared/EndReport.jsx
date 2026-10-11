@@ -12,11 +12,11 @@ export default function EndReport({ title = 'Simulation complete', subtitle, sta
         {subtitle && <p className="text-slate-500 mt-1">{subtitle}</p>}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {stats.map(s => (
           <div key={s.label} className={`${ui.card} p-4`}>
             <div className={ui.cardTitle}>{s.label}</div>
-            <div className="text-2xl md:text-3xl font-bold font-mono text-slate-900 mt-1">{s.value}</div>
+            <div className="text-xl lg:text-2xl font-bold font-mono text-slate-900 mt-1 break-words">{s.value}</div>
           </div>
         ))}
       </div>
@@ -33,7 +33,7 @@ export default function EndReport({ title = 'Simulation complete', subtitle, sta
               <XAxis dataKey="week" stroke={CHART.axis} tick={{ fontSize: 12 }} />
               <YAxis stroke={CHART.axis} tick={{ fontSize: 12 }} />
               <Tooltip contentStyle={CHART.tooltip} labelFormatter={w => `Week ${w}`} />
-              <Legend wrapperStyle={{ fontSize: 12 }} />
+              <Legend wrapperStyle={{ fontSize: 12 }} itemSorter={null} />
               {series.map(s => (
                 <Line
                   key={s.key}
@@ -56,7 +56,7 @@ export default function EndReport({ title = 'Simulation complete', subtitle, sta
       <div className="flex justify-center pb-8">
         <button
           type="button"
-          onClick={onRestart}
+          onClick={() => { onRestart(); window.scrollTo(0, 0); }}
           className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3 rounded-xl font-bold text-white shadow-sm transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-slate-400"
           style={{ backgroundColor: accent }}
         >
