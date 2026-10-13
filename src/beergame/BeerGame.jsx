@@ -366,13 +366,16 @@ const SupplyChainMap = ({ currentWeek, history, activeRoleId }) => {
 
 
               {/* === ROLE COLUMN (Top Box & Bottom Box) === */}
-              <div className={`flex flex-col items-center w-24 ${activeRoleId && role.id !== activeRoleId ? 'opacity-50' : ''}`}>
+              {/* Dim box contents, never the white backings, or the loop rails show through. */}
+              <div className="flex flex-col items-center w-24">
 
                 {/* TOP BOX: Order Desk */}
                 <div className={`${TOP_ROW_H} w-full flex items-center justify-center`}>
                     <div className="w-full bg-white border border-slate-200 rounded-lg py-2 flex flex-col items-center shadow-sm relative group">
-                      <div className="text-[9px] text-slate-500 uppercase tracking-tighter mb-1">Orders</div>
-                      <div className="font-mono text-amber-700 font-bold text-lg leading-none">{orderPlaced}</div>
+                      <div className={activeRoleId && role.id !== activeRoleId ? 'opacity-50 flex flex-col items-center' : 'flex flex-col items-center'}>
+                        <div className="text-[9px] text-slate-500 uppercase tracking-tighter mb-1">Orders</div>
+                        <div className="font-mono text-amber-700 font-bold text-lg leading-none">{orderPlaced}</div>
+                      </div>
                       {/* Tooltip */}
                       <div className="absolute bottom-full mb-2 bg-slate-900 text-xs text-white p-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50">
                         Last Wk Order
@@ -385,7 +388,7 @@ const SupplyChainMap = ({ currentWeek, history, activeRoleId }) => {
                 {/* BOTTOM BOX: Inventory/Warehouse */}
                 <div className={`${BOT_ROW_H} w-full flex items-center justify-center`}>
                     <div className="w-full rounded-xl bg-white relative">
-                    <div className={`w-full aspect-square rounded-xl ${role.bg} ${role.border} border-2 flex flex-col items-center justify-center relative shadow-sm ${activeRoleId === role.id ? `ring-2 ring-offset-2 ring-offset-white ${role.ring}` : ''}`}>
+                    <div className={`w-full aspect-square rounded-xl ${role.bg} ${role.border} border-2 flex flex-col items-center justify-center relative shadow-sm ${emphasis(role)}`}>
                       <Icon className={`w-6 h-6 ${role.color} mb-1`} />
                       <div className={`text-xl font-bold font-mono ${inventory <= 0 ? 'text-red-600' : 'text-slate-900'}`}>
                           {inventory}
