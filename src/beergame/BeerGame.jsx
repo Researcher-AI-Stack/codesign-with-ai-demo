@@ -442,7 +442,7 @@ const SupplyChainMap = ({ currentWeek, history, activeRoleId }) => {
         <div className="relative flex flex-col items-center w-20 shrink-0">
             <div className={TOP_ROW_H}></div> {/* Spacer for alignment */}
             <div className={`${GAP_H} relative w-full`}>
-               <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-500 uppercase -rotate-90 tracking-widest bg-white px-1.5">Production</span>
+               <span className="absolute left-1/2 bottom-3 -translate-x-1/2 text-[10px] font-bold text-slate-500 uppercase [writing-mode:vertical-rl] rotate-180 tracking-widest bg-white py-1.5">Production</span>
             </div>
             <div className={`${BOT_ROW_H} flex items-center justify-center`}>
                <div className="flex flex-col items-center">
