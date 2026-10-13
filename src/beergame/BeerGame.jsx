@@ -203,7 +203,7 @@ const SupplyChainMap = ({ currentWeek, history, activeRoleId }) => {
 
   // Alignment Constants
   const TOP_ROW_H = "h-20";    // Height for Order boxes/arrows
-  const GAP_H = "h-16";        // Height for vertical gap
+  const GAP_H = "h-20";        // Height for vertical gap
   const BOT_ROW_H = "h-24";    // Height for Inventory boxes/arrows
 
   return (
@@ -298,10 +298,10 @@ const SupplyChainMap = ({ currentWeek, history, activeRoleId }) => {
       <div className="hidden md:flex justify-center min-w-[900px]">
       <div className="relative flex items-start min-w-0">
         {/* Loop track: orders run right along the top row, shipments return left along the bottom row.
-            Rails sit at the row centers (TOP_ROW_H h-20 -> 40px, BOT_ROW_H h-24 -> 80+64+48 = 192px)
+            Rails sit at the row centers (TOP_ROW_H h-20 -> 40px, BOT_ROW_H h-24 -> 80+80+48 = 208px)
             and the end columns (w-20) -> 40px in from each side. */}
-        <div className="absolute left-10 right-10 top-10 h-[76px] border-2 border-b-0 border-dashed border-amber-400 rounded-t-3xl pointer-events-none" aria-hidden="true"></div>
-        <div className="absolute left-10 right-10 top-[116px] h-[76px] border-2 border-t-0 border-emerald-400 rounded-b-3xl pointer-events-none" aria-hidden="true"></div>
+        <div className="absolute left-10 right-10 top-10 h-[84px] border-2 border-b-0 border-dashed border-amber-400 rounded-t-3xl pointer-events-none" aria-hidden="true"></div>
+        <div className="absolute left-10 right-10 top-[124px] h-[84px] border-2 border-t-0 border-emerald-400 rounded-b-3xl pointer-events-none" aria-hidden="true"></div>
 
         {/* === CONSUMER COLUMN === */}
         <div className="relative flex flex-col items-center w-20 shrink-0">
@@ -442,7 +442,7 @@ const SupplyChainMap = ({ currentWeek, history, activeRoleId }) => {
         <div className="relative flex flex-col items-center w-20 shrink-0">
             <div className={TOP_ROW_H}></div> {/* Spacer for alignment */}
             <div className={`${GAP_H} relative w-full`}>
-               <span className="absolute left-1/2 bottom-3 -translate-x-1/2 text-[10px] font-bold text-slate-500 uppercase [writing-mode:vertical-rl] rotate-180 tracking-widest bg-white py-1.5">Production</span>
+               <span className="absolute left-1/2 top-1/2 -mt-1 -translate-x-1/2 -translate-y-1/2 text-[9px] font-bold text-slate-500 uppercase [writing-mode:vertical-rl] rotate-180 tracking-wider bg-white py-0.5">Production</span>
             </div>
             <div className={`${BOT_ROW_H} flex items-center justify-center`}>
                <div className="flex flex-col items-center">
