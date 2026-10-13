@@ -449,7 +449,7 @@ const SupplyChainMap = ({ currentWeek, history, activeRoleId }) => {
                   <div className="w-16 h-16 bg-white border-2 border-slate-300 rounded-full flex items-center justify-center shadow-sm">
                       <Factory className="w-8 h-8 text-slate-500" />
                   </div>
-                  <span className="text-[10px] font-bold text-slate-500 mt-2 uppercase">Raw Mat.</span>
+                  <span className="text-[10px] font-bold text-slate-500 mt-2 uppercase text-center leading-tight">Raw Material</span>
                </div>
             </div>
         </div>
