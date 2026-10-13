@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { Menu, X, Package, UtensilsCrossed, Cpu, ArrowRight, ChevronRight } from 'lucide-react'
 import './App.css'
 import BeerGame from './beergame/BeerGame'
@@ -159,10 +159,58 @@ const Introduction = ({ onSelect }) => (
   </div>
 );
 
+const LeaveDialog = ({ onStay, onLeave }) => {
+  const stayRef = useRef(null);
+
+  useEffect(() => {
+    stayRef.current?.focus();
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') onStay();
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [onStay]);
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-slate-900/40" onClick={onStay} aria-hidden="true" />
+      <div
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="leave-dialog-title"
+        aria-describedby="leave-dialog-desc"
+        className="relative w-full max-w-sm bg-white rounded-xl border border-slate-200 shadow-xl p-6"
+      >
+        <h2 id="leave-dialog-title" className="text-lg font-bold text-slate-900">Leave this simulation?</h2>
+        <p id="leave-dialog-desc" className="mt-2 text-sm text-slate-600">Your progress will be lost.</p>
+        <div className="mt-6 flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
+          <button
+            type="button"
+            onClick={onLeave}
+            className="px-4 py-2.5 rounded-lg border border-red-200 text-red-700 font-semibold hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+          >
+            Leave
+          </button>
+          <button
+            ref={stayRef}
+            type="button"
+            onClick={onStay}
+            className="px-4 py-2.5 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+          >
+            Stay
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 function App() {
   const [activeView, setActiveView] = useState('intro');
   const [menuOpen, setMenuOpen] = useState(false);
   const [gameInProgress, setGameInProgress] = useState(false);
+  const [pendingView, setPendingView] = useState(null);
+  const cancelLeave = useCallback(() => setPendingView(null), []);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -178,15 +226,19 @@ function App() {
     };
   }, [menuOpen]);
 
-  const selectView = (id) => {
-    if (id !== activeView && gameInProgress &&
-        !window.confirm('Leave this simulation? Your progress will be lost.')) {
-      return;
-    }
+  const goToView = (id) => {
     if (id !== activeView) setGameInProgress(false);
     setActiveView(id);
     setMenuOpen(false);
     window.scrollTo(0, 0);
+  };
+
+  const selectView = (id) => {
+    if (id !== activeView && gameInProgress) {
+      setPendingView(id);
+      return;
+    }
+    goToView(id);
   };
 
   const renderMainContent = () => {
@@ -272,6 +324,16 @@ function App() {
       <main className="flex-1 min-w-0 overflow-x-clip flex flex-col bg-slate-50">
         {renderMainContent()}
       </main>
+
+      {pendingView && (
+        <LeaveDialog
+          onStay={cancelLeave}
+          onLeave={() => {
+            goToView(pendingView);
+            setPendingView(null);
+          }}
+        />
+      )}
     </div>
   );
 }
