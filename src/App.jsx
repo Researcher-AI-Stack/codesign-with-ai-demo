@@ -1,306 +1,341 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { Menu, X, Package, UtensilsCrossed, Cpu, ArrowRight, ChevronRight } from 'lucide-react'
 import './App.css'
 import BeerGame from './beergame/BeerGame'
 import McdonaldsGame from './mcdonaldsgame/McdonaldsGame'
 import NvidiaGame from './nvidiagame/NvidiaGame'
+import { ACCENTS } from './shared/theme'
 
-function App() {
-  // This "state" keeps track of which component is currently visible
-  const [activeView, setActiveView] = useState('intro');
+const PROJECT_NAME = 'Co-Designing with AI';
 
-  // Logic to decide what to show on the right side
-  const renderMainContent = () => {
-    switch (activeView) {
-      case 'intro':
-        return <Introduction />;
-	  case 'beer':
-        return <BeerGame />;
-      case 'game2':
-        return <McdonaldsGame />;
-      case 'game3':
-        return <NvidiaGame />;
-      default:
-        return <Introduction />;
-    }
-  };
+const VIEWS = [
+  { id: 'intro', label: 'Introduction' },
+  { id: 'beer', label: 'Beer Game' },
+  { id: 'game2', label: "Fast Food (McDonald's)" },
+  { id: 'game3', label: 'Semiconductor (NVIDIA)' },
+];
 
-  const SIDEBAR_TEXT = {
-    header: "Project Overview",
-    generalDescription: "This platform hosts AI-generated simulations adapted from the Beer Game to visualize complex supply chain systems.",
-    gameDetails: {
-	  intro: "Overview and instructions on using this platform.",
-      beer: "A supply chain simulation demonstrating the bullwhip effect and inventory management.",
-      game2: "Take on the role as Martin Bower's Regional DC Manager and coordinate replenishment efforts to ensure minimal inventory and backlog.",
-      game3: "Take on the role as NVIDIA's Procurement Manager and coordinate replenishment efforts to ensure minimal inventory and backlog."
-    }
-  };
-  
- const Introduction = ({ apiKey, onSetKey }) => {
+const GAMES = [
+  {
+    id: 'beer',
+    icon: Package,
+    accent: ACCENTS.beer,
+    role: 'Play any of 4 roles',
+    description: 'The classic four-stage supply chain. Choose Human or AI for each role and watch small demand changes grow upstream.',
+  },
+  {
+    id: 'game2',
+    icon: UtensilsCrossed,
+    accent: ACCENTS.fastFood,
+    role: 'Regional DC Manager at Martin Brower',
+    description: 'Turn restaurant orders into bun, beef, and fish orders while AI suppliers decide how much to produce.',
+  },
+  {
+    id: 'game3',
+    icon: Cpu,
+    accent: ACCENTS.semiconductor,
+    role: 'NVIDIA Procurement Manager',
+    description: 'Source CoWoS packaging and HBM memory for Blackwell GPUs from AI-run suppliers through a demand surge.',
+  },
+];
+
+const CODE_STEPS = ['Create', 'Orchestrate', 'Deploy', 'Expand'];
+
+const IMPACT = [
+  'Rapid, resource-light system modeling at scale.',
+  'Cross-industry simulations beyond supply chains.',
+  'Fast scenario testing to reveal risks and bottlenecks.',
+  'Decision-ready insights before real-world deployment.',
+];
+
+const cls = {
+  sectionTitle: 'text-sm font-bold text-slate-500 uppercase tracking-wider mb-3',
+  body: 'text-[0.95rem] leading-relaxed text-slate-600',
+  btn: 'p-3 text-left bg-white text-slate-600 border border-slate-200 rounded-lg cursor-pointer transition-colors hover:bg-slate-50 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500',
+  activeBtn: 'p-3 text-left bg-blue-600 text-white border border-blue-600 rounded-lg cursor-pointer font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500',
+};
+
+const Introduction = ({ onSelect }) => (
+  <div className="p-4 md:p-10">
+    <div className="max-w-[960px] mx-auto space-y-10">
+
+      <header>
+        <h1 className="text-3xl md:text-[2.5rem] md:leading-tight font-bold text-slate-900 mb-2">{PROJECT_NAME}</h1>
+        <p className="text-lg md:text-xl text-blue-600">
+          AI-generated supply chain simulations, adapted from the classic Beer Game to real industries.
+        </p>
+      </header>
+
+      <section>
+        <h2 className={cls.sectionTitle}>Choose a simulation</h2>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {GAMES.map(game => {
+            const Icon = game.icon;
+            const label = VIEWS.find(v => v.id === game.id).label;
+            return (
+              <div key={game.id} className="flex flex-col bg-white border border-slate-200 rounded-xl shadow-sm p-5 border-t-4" style={{ borderTopColor: game.accent }}>
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 shrink-0 rounded-lg flex items-center justify-center text-white" style={{ backgroundColor: game.accent }}>
+                    <Icon className="w-5 h-5" aria-hidden="true" />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="font-bold text-slate-900 leading-tight">{label}</h3>
+                    <p className="text-sm text-slate-500">{game.role}</p>
+                  </div>
+                </div>
+                <p className="text-sm text-slate-600 leading-relaxed mb-4 flex-1">{game.description}</p>
+                <button
+                  type="button"
+                  onClick={() => onSelect(game.id)}
+                  className="flex items-center justify-center gap-2 py-2.5 rounded-lg font-semibold text-white transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-slate-400"
+                  style={{ backgroundColor: game.accent }}
+                >
+                  Play <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="bg-white border border-slate-200 rounded-xl p-5">
+        <h2 className={cls.sectionTitle}>How to play</h2>
+        <ol className={`${cls.body} list-decimal pl-5 space-y-1.5`}>
+          <li>Pick a simulation above or from the menu.</li>
+          <li>
+            In the Beer Game, choose <strong>Human</strong> or <strong>AI</strong> for each role. In the industry simulations
+            you play the distribution or procurement role, and AI agents run the suppliers.
+          </li>
+          <li>Place orders each week for 20 weeks, keeping inventory and backlog costs as low as possible.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2 className={cls.sectionTitle}>About the project</h2>
+        <p className={`${cls.body} mb-4`}>
+          Complex systems are hard to design and test because traditional models rely on fixed assumptions and slow
+          development cycles. Co-Designing with AI turns system concepts into executable simulations, using
+          industry-specific ontologies to keep the logic consistent and reduce hallucination. Agentic AI turns a
+          hot-seat multiplayer game into role-specific training.
+        </p>
+
+        <div className="bg-white border border-slate-200 rounded-xl p-5 mb-4">
+          <h3 className="font-semibold text-slate-900 mb-3">The CODE framework</h3>
+          <ol className="flex flex-col sm:flex-row sm:items-center gap-2">
+            {CODE_STEPS.map((step, i) => (
+              <li key={step} className="flex flex-col sm:flex-row sm:items-center gap-2 sm:flex-1">
+                <div className="flex-1 text-center bg-blue-50 border border-blue-200 rounded-lg px-3 py-2.5">
+                  <span className="block text-2xl font-bold text-blue-600 leading-none">{step[0]}</span>
+                  <span className="text-sm font-semibold text-slate-700">{step}</span>
+                </div>
+                {i < CODE_STEPS.length - 1 && (
+                  <ChevronRight className="hidden sm:block w-5 h-5 shrink-0 text-slate-400" aria-hidden="true" />
+                )}
+              </li>
+            ))}
+          </ol>
+          <p className="text-sm text-slate-500 mt-3">
+            Refines one-shot prompting to recreate game mechanics, then grounds each industry version in its own ontology.
+          </p>
+        </div>
+
+        <h3 className="font-semibold text-slate-900 mb-3">Impact</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {IMPACT.map(text => (
+            <div key={text} className="bg-white border border-slate-200 border-l-4 border-l-blue-500 rounded-lg p-3">
+              <p className="text-sm text-slate-700">{text}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <footer className="pt-5 border-t border-slate-200">
+        <p className="text-sm text-slate-500">
+          These simulations are AI-generated prototypes, so you may notice minor bugs.
+        </p>
+      </footer>
+
+    </div>
+  </div>
+);
+
+const LeaveDialog = ({ onStay, onLeave }) => {
+  const stayRef = useRef(null);
+
+  useEffect(() => {
+    stayRef.current?.focus();
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') onStay();
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [onStay]);
+
   return (
-    <div style={{ ...styles.content, padding: '40px' }}>
-      <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-        
-        {/* Header Section */}
-        <div style={{ marginBottom: '40px' }}>
-          <h1 style={{ ...styles.title, fontSize: '2.5rem', marginBottom: '10px' }}>
-            Co-Designing with AI
-          </h1>
-          <p style={{ ...styles.descriptionText, fontSize: '1.2rem', color: '#3498db' }}>
-            Build industrial simulations tailored to your company.
-          </p>
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-slate-900/40" onClick={onStay} aria-hidden="true" />
+      <div
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="leave-dialog-title"
+        aria-describedby="leave-dialog-desc"
+        className="relative w-full max-w-sm bg-white rounded-xl border border-slate-200 shadow-xl p-6"
+      >
+        <h2 id="leave-dialog-title" className="text-lg font-bold text-slate-900">Leave this simulation?</h2>
+        <p id="leave-dialog-desc" className="mt-2 text-sm text-slate-600">Your progress will be lost.</p>
+        <div className="mt-6 flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
+          <button
+            type="button"
+            onClick={onLeave}
+            className="px-4 py-2.5 rounded-lg border border-red-200 text-red-700 font-semibold hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+          >
+            Leave
+          </button>
+          <button
+            ref={stayRef}
+            type="button"
+            onClick={onStay}
+            className="px-4 py-2.5 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+          >
+            Stay
+          </button>
         </div>
-
-        {/* Instructions & How to Use */}
-        <div style={styles.generalBox}>
-          <h3 style={styles.subTitle}>Instructions</h3>
-          <p style={styles.descriptionText}>
-            This demonstration platform showcases the final outputs of Co-Designing with AI, 
-            using industry-adapted simulations derived from the classic Beer Game supply-chain model.
-          </p>
-          
-          <div style={{ ...styles.dynamicBox, marginTop: '20px' }}>
-            <h4 style={{ ...styles.subTitle, color: '#f8fafc' }}>How to Use the Demo</h4>
-            <ul style={{ ...styles.descriptionText, paddingLeft: '20px', marginTop: '10px' }}>
-              <li><strong>Select a simulation</strong> using the side tabs: Beer Game, Fast Food Industry, or Semiconductor Industry.</li>
-              <li><strong>Choose the control mode</strong> for each role (Player or AI).</li>
-              <li><strong>Run the simulation</strong> to explore system behavior under different configurations.</li>
-            </ul>
-            <p style={{ ...styles.descriptionText, marginTop: '15px', fontSize: '0.85rem', fontStyle: 'italic' }}>
-              *For industry-specific simulations, only the Regional Distribution Center Manager role is user-controlled. 
-              Other roles are operated by Agentic AI.
-            </p>
-          </div>
-        </div>
-
-        {/* System Connection Section */}
-        <div style={{ ...styles.dynamicBox, borderLeftColor: '#e74c3c', marginBottom: '40px' }}>
-          <h3 style={styles.subTitle}>System Connection (Under Construction)</h3>
-          {apiKey ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-              <p style={{ ...styles.dynamicText, color: '#4ade80', fontWeight: 'bold' }}>
-                ✅ AI Engine Connected
-              </p>
-              <button onClick={onSetKey} style={{ ...styles.btn, padding: '4px 10px', fontSize: '0.75rem' }}>
-                Update Key
-              </button>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <p style={styles.dynamicText}>To enable Agentic AI roles, please provide a Gemini API Key.</p>
-              <button onClick={onSetKey} style={styles.activeBtn}>Enter API Key</button>
-            </div>
-          )}
-        </div>
-
-        {/* Background & Approach */}
-        <div style={styles.generalBox}>
-          <h3 style={styles.subTitle}>Background</h3>
-          <p style={styles.descriptionText}>
-            Complex systems are difficult to design, test, and scale. Traditional models rely on fixed assumptions, 
-            static rules, and slow development cycles, making it hard to explore uncertainty, anticipate change, 
-            or evaluate downstream impacts before deployment.
-          </p>
-        </div>
-
-        <div style={styles.generalBox}>
-          <h3 style={styles.subTitle}>The Approach</h3>
-          <p style={{ ...styles.descriptionText, marginBottom: '15px' }}>
-            Co-Designing with AI enables rapid transformation of system concepts into executable simulations, 
-            leveraging industry-specific ontologies to ensure system logic consistency.
-          </p>
-          <p style={styles.descriptionText}>
-            Our <strong>Create-Orchestrate-Deploy-Expand (CODE)</strong> framework refines the one-shot prompt 
-            engineering technique for recreating game mechanics and leverages industry-specific ontologies to mitigate 
-            hallucination. Agentic AI is integrated to shift the simulation from a hot-seat multiplayer style to a 
-            role-specific training simulation.
-          </p>
-        </div>
-
-        {/* Demo Details */}
-        <div style={styles.generalBox}>
-          <h3 style={styles.subTitle}>Demo Capabilities</h3>
-          <ul style={{ ...styles.descriptionText, paddingLeft: '20px' }}>
-            <li>Simulate industry supply chains in Semiconductors and Fast Food</li>
-            <li>Multiple modes: collaborative game, role-based training, or Agentic AI-driven simulation</li>
-            <li>Adjust parameters, constraints, and scenarios in real time</li>
-            <li>Observe system behavior and emergent outcomes</li>
-          </ul>
-        </div>
-
-        {/* Impact Section */}
-        <div style={{ marginBottom: '40px' }}>
-          <h3 style={styles.subTitle}>Impact</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginTop: '10px' }}>
-            <div style={{ ...styles.dynamicBox, marginBottom: 0 }}>
-              <p style={styles.dynamicText}>Rapid, resource-light system modeling at scale.</p>
-            </div>
-            <div style={{ ...styles.dynamicBox, marginBottom: 0 }}>
-              <p style={styles.dynamicText}>Cross-industry simulations beyond supply chains.</p>
-            </div>
-            <div style={{ ...styles.dynamicBox, marginBottom: 0 }}>
-              <p style={styles.dynamicText}>Fast scenario testing to reveal risks and bottlenecks.</p>
-            </div>
-            <div style={{ ...styles.dynamicBox, marginBottom: 0 }}>
-              <p style={styles.dynamicText}>Decision-ready insights before real-world deployment.</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Notes Footer */}
-        <div style={{ padding: '20px', borderTop: '1px solid #334155' }}>
-          <p style={{ ...styles.descriptionText, fontSize: '0.8rem', opacity: 0.6 }}>
-            <strong>Notes:</strong> This platform represents a raw, auto-generated prototype. Minor bugs or 
-            interface misalignments may be present. Best viewed on a PC for optimal interaction.
-          </p>
-        </div>
-
       </div>
     </div>
   );
 };
-  return (
-    <div style={styles.container}>
-      {/* LEFT SIDEBAR */}
-      <nav style={styles.sidebar}>
-        <h2 style={styles.title}>Menu</h2>
-		
-		{/* GENERAL DESCRIPTION */}
-	    <div style={styles.generalBox}>
-	  	  <h3 style={styles.subTitle}>{SIDEBAR_TEXT.header}</h3>
-		  <p style={styles.descriptionText}>{SIDEBAR_TEXT.generalDescription}</p>
-	    </div>
 
-	    {/* DYNAMIC GAME DESCRIPTION */}
-	    <div style={styles.dynamicBox}>
-		  <p style={styles.dynamicText}>
-		    <strong>Current View:</strong> {SIDEBAR_TEXT.gameDetails[activeView]}
-		  </p>
-	    </div>
-		<button
-		  onClick={() => setActiveView('intro')}
-		  style={activeView === 'intro' ? styles.activeBtn : styles.btn}
-		>
-		  Introduction
-		</button>
-        <button 
-          onClick={() => setActiveView('beer')} 
-          style={activeView === 'beer' ? styles.activeBtn : styles.btn}
+function App() {
+  const [activeView, setActiveView] = useState('intro');
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [gameInProgress, setGameInProgress] = useState(false);
+  const [pendingView, setPendingView] = useState(null);
+  const cancelLeave = useCallback(() => setPendingView(null), []);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') setMenuOpen(false);
+    };
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [menuOpen]);
+
+  const goToView = (id) => {
+    if (id !== activeView) setGameInProgress(false);
+    setActiveView(id);
+    setMenuOpen(false);
+    window.scrollTo(0, 0);
+  };
+
+  const selectView = (id) => {
+    if (id !== activeView && gameInProgress) {
+      setPendingView(id);
+      return;
+    }
+    goToView(id);
+  };
+
+  const renderMainContent = () => {
+    switch (activeView) {
+      case 'beer':
+        return <BeerGame onProgressChange={setGameInProgress} />;
+      case 'game2':
+        return <McdonaldsGame onProgressChange={setGameInProgress} />;
+      case 'game3':
+        return <NvidiaGame onProgressChange={setGameInProgress} />;
+      default:
+        return <Introduction onSelect={selectView} />;
+    }
+  };
+
+  const activeLabel = VIEWS.find(v => v.id === activeView)?.label;
+
+  return (
+    <div className="flex flex-col md:flex-row min-h-dvh font-sans text-slate-900 pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]">
+      {/* MOBILE TOP BAR */}
+      <header className="md:hidden sticky top-0 z-40 flex items-center justify-between gap-3 px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] bg-white border-b border-slate-200">
+        <div className="min-w-0">
+          <div className="font-bold leading-tight truncate">{PROJECT_NAME}</div>
+          <div className="text-xs text-slate-500 truncate">{activeLabel}</div>
+        </div>
+        <button
+          type="button"
+          onClick={() => setMenuOpen(open => !open)}
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={menuOpen}
+          aria-controls="main-nav"
+          className="shrink-0 w-11 h-11 flex items-center justify-center rounded-lg border border-slate-300 text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
         >
-          Beer Game
+          {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
-        <button 
-          onClick={() => setActiveView('game2')} 
-          style={activeView === 'game2' ? styles.activeBtn : styles.btn}
-        >
-          Industry - Fast Food
-        </button>
-        <button 
-          onClick={() => setActiveView('game3')} 
-          style={activeView === 'game3' ? styles.activeBtn : styles.btn}
-        >
-          Industry - Semiconductor
-        </button>
+      </header>
+
+      {/* MOBILE DRAWER BACKDROP */}
+      {menuOpen && (
+        <div
+          className="md:hidden fixed inset-0 z-40 bg-slate-900/40"
+          onClick={() => setMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* SIDEBAR (slide-out drawer below md, fixed-width sidebar at md and up) */}
+      <nav
+        id="main-nav"
+        className={`fixed inset-y-0 left-0 z-50 w-[85vw] max-w-[300px] overflow-y-auto max-md:px-6 max-md:pt-[max(1.5rem,env(safe-area-inset-top))] max-md:pb-[max(1.5rem,env(safe-area-inset-bottom))] transition-[transform,visibility] duration-200 ${menuOpen ? 'translate-x-0 visible' : '-translate-x-full invisible'} md:visible md:translate-x-0 md:sticky md:top-0 md:h-dvh md:shrink-0 md:max-w-none md:w-[280px] md:p-6 bg-white border-r border-slate-200 flex flex-col`}
+      >
+        <div className="flex items-start justify-between gap-2 mb-6">
+          <div>
+            <h2 className="text-xl font-bold text-slate-900 leading-tight">{PROJECT_NAME}</h2>
+            <p className="text-sm text-slate-500 mt-1">Supply chain simulations</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setMenuOpen(false)}
+            aria-label="Close menu"
+            className="md:hidden -mt-2 -mr-2 w-11 h-11 shrink-0 flex items-center justify-center rounded-lg text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          {VIEWS.map(view => (
+            <button
+              key={view.id}
+              type="button"
+              onClick={() => selectView(view.id)}
+              aria-current={activeView === view.id ? 'page' : undefined}
+              className={activeView === view.id ? cls.activeBtn : cls.btn}
+            >
+              {view.label}
+            </button>
+          ))}
+        </div>
       </nav>
 
-      {/* RIGHT CONTENT AREA */}
-      <main style={styles.content}>
-		<div style={{ flex: 1, width: '100%', height: '100%' }}>
-		  {renderMainContent()}
-		</div>
-	  </main>
+      {/* CONTENT AREA */}
+      <main className="flex-1 min-w-0 overflow-x-clip flex flex-col bg-slate-50">
+        {renderMainContent()}
+      </main>
+
+      {pendingView && (
+        <LeaveDialog
+          onStay={cancelLeave}
+          onLeave={() => {
+            goToView(pendingView);
+            setPendingView(null);
+          }}
+        />
+      )}
     </div>
   );
 }
-
-// Simple CSS-in-JS for quick setup
-const styles = {
-  container: {
-    display: 'flex',
-    height: '100vh',
-    width: '100vw',
-    fontFamily: 'sans-serif',
-  },
-  sidebar: {
-    width: '300px', // Widened from 250px
-    backgroundColor: '#1e293b',
-    color: 'white',
-    padding: '25px',
-    display: 'flex',
-    flexDirection: 'column',
-    borderRight: '1px solid #334155',
-  },
-  title: {
-    fontSize: '1.6rem',
-    marginBottom: '15px',
-    color: '#f8fafc',
-  },
-  subTitle: {
-    fontSize: '0.85rem',
-    textTransform: 'uppercase',
-    letterSpacing: '0.05em',
-    color: '#94a3b8',
-    marginBottom: '8px',
-    marginTop: 0,
-  },
-  generalBox: {
-    marginBottom: '20px',
-    paddingBottom: '20px',
-    borderBottom: '1px solid #334155',
-  },
-  dynamicBox: {
-    backgroundColor: 'rgba(52, 152, 219, 0.1)',
-    padding: '12px',
-    borderRadius: '6px',
-    borderLeft: '4px solid #3498db',
-    marginBottom: '25px',
-  },
-  descriptionText: {
-    fontSize: '0.9rem',
-    lineHeight: '1.5',
-    color: '#cbd5e1',
-    margin: 0,
-  },
-  dynamicText: {
-    fontSize: '0.85rem',
-    lineHeight: '1.4',
-    color: '#e2e8f0',
-    margin: 0,
-  },
-  buttonGroup: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '10px',
-  },
-  btn: {
-    padding: '12px',
-    textAlign: 'left',
-    backgroundColor: 'transparent',
-    color: '#94a3b8',
-    border: '1px solid #334155',
-    borderRadius: '6px',
-    cursor: 'pointer',
-    transition: '0.2s',
-  },
-  activeBtn: {
-    padding: '12px',
-    textAlign: 'left',
-    backgroundColor: '#3498db',
-    color: 'white',
-    border: '1px solid #3498db',
-    borderRadius: '6px',
-    cursor: 'pointer',
-    fontWeight: 'bold',
-  },
-  content: {
-    flex: 1,
-    height: '100vh',
-    overflowY: 'auto',
-    padding: '0',
-    // Change this to the exact dark color used in your Beer Game
-    backgroundColor: '#0f172a', 
-  }
-};
 
 export default App;
